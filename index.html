@@ -918,14 +918,14 @@
                                 <span class="font-semibold">Digital Wallet Payments</span>
                             </div>
                             <div class="grid grid-cols-2 gap-3">
-                                <button class="bg-purple-600 text-white p-2 rounded text-sm font-medium hover:bg-purple-700">
-                                    📱 PhonePe
+                                <button onclick="openPhonePe('${course.price}')" class="bg-purple-600 text-white p-2 rounded text-sm font-medium hover:bg-purple-700">
+                                    📱 Pay with PhonePe
                                 </button>
-                                <button class="bg-blue-600 text-white p-2 rounded text-sm font-medium hover:bg-blue-700">
-                                    💳 Google Pay
+                                <button onclick="openGooglePay('${course.price}')" class="bg-blue-600 text-white p-2 rounded text-sm font-medium hover:bg-blue-700">
+                                    💳 Pay with Google Pay
                                 </button>
                             </div>
-                            <p class="text-xs text-gray-600 mt-2">Scan QR code or use UPI ID above</p>
+                            <p class="text-xs text-gray-600 mt-2">Click buttons above to open apps directly</p>
                         </div>
                     </div>
                 </div>
@@ -1066,9 +1066,14 @@
                 return;
             }
             
-            document.getElementById('display-upi-id').textContent = newUpiId;
+            // Update all instances of UPI ID on the page
+            const displayElements = document.querySelectorAll('#display-upi-id');
+            displayElements.forEach(element => {
+                element.textContent = newUpiId;
+            });
+            
             localStorage.setItem('admin_upi_id', newUpiId);
-            alert('UPI ID updated successfully!');
+            alert('UPI ID updated successfully! It will appear in all enrollment forms.');
         }
 
         function updateQRCode() {
@@ -1095,13 +1100,48 @@
             
             if (savedUpiId) {
                 document.getElementById('edit-upi-id').value = savedUpiId;
-                document.getElementById('display-upi-id').textContent = savedUpiId;
+                const displayElements = document.querySelectorAll('#display-upi-id');
+                displayElements.forEach(element => {
+                    element.textContent = savedUpiId;
+                });
             }
             
             if (savedQrCode) {
                 document.getElementById('edit-qr-code').value = savedQrCode;
                 updateQRCode();
             }
+        }
+
+        function openPhonePe(amount) {
+            const upiId = localStorage.getItem('admin_upi_id') || 'nikhilprajapati2370@paytm';
+            const merchantName = 'BittCode Academy';
+            
+            // PhonePe UPI URL format
+            const phonepeUrl = `phonepe://pay?pa=${upiId}&pn=${encodeURIComponent(merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent('BittCode Course Payment')}`;
+            
+            // Try to open PhonePe app
+            window.location.href = phonepeUrl;
+            
+            // Fallback: Show UPI details if app doesn't open
+            setTimeout(() => {
+                alert(`If PhonePe didn't open automatically:\n\n1. Open PhonePe app manually\n2. Go to "Send Money" > "To Phone Number/UPI ID"\n3. Enter UPI ID: ${upiId}\n4. Amount: ₹${amount}\n5. Add note: BittCode Course Payment`);
+            }, 2000);
+        }
+
+        function openGooglePay(amount) {
+            const upiId = localStorage.getItem('admin_upi_id') || 'nikhilprajapati2370@paytm';
+            const merchantName = 'BittCode Academy';
+            
+            // Google Pay UPI URL format
+            const gpayUrl = `tez://upi/pay?pa=${upiId}&pn=${encodeURIComponent(merchantName)}&am=${amount}&cu=INR&tn=${encodeURIComponent('BittCode Course Payment')}`;
+            
+            // Try to open Google Pay app
+            window.location.href = gpayUrl;
+            
+            // Fallback: Show UPI details if app doesn't open
+            setTimeout(() => {
+                alert(`If Google Pay didn't open automatically:\n\n1. Open Google Pay app manually\n2. Tap "New Payment" > "Pay by UPI ID"\n3. Enter UPI ID: ${upiId}\n4. Amount: ₹${amount}\n5. Add note: BittCode Course Payment`);
+            }, 2000);
         }
 
         function populateCourseManagement() {
@@ -1478,5 +1518,5 @@
             `;
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97ee7da741eb2e89',t:'MTc1NzgzODI5Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97ee995040e91772',t:'MTc1NzgzOTQyOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
