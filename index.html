@@ -1,16 +1,51 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>My GitHub Pages Site</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TeachCode Academy</title>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    // Import Firebase libraries from CDN
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // Make them available globally
+    window.initializeApp = initializeApp;
+    window.getAuth = getAuth;
+    window.getFirestore = getFirestore;
+  </script>
+
+  <!-- Your stylesheet -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Welcome to My GitHub Pages Site 🎉</h1>
-  <p>This is a fresh starter site hosted on GitHub Pages.</p>
-  <button onclick="sayHello()">Click Me</button>
+  <header>
+    <h1>Welcome to TeachCode Academy</h1>
+    <nav>
+      <button onclick="showLogin()">Login</button>
+      <button onclick="showRegister()">Register</button>
+    </nav>
+  </header>
 
-  <script src="script.js"></script>
+  <main>
+    <section id="auth-section">
+      <h2>Login / Register</h2>
+      <input id="email" type="email" placeholder="Email" />
+      <input id="password" type="password" placeholder="Password" />
+      <button onclick="login()">Login</button>
+      <button onclick="register()">Register</button>
+    </section>
+
+    <section id="courses">
+      <h2>Courses</h2>
+      <div id="course-list"></div>
+    </section>
+  </main>
+
+  <!-- Your script -->
+  <script src="script.js" type="module"></script>
 </body>
 </html>
