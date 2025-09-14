@@ -1,83 +1,960 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TeachCode — Courses</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- Firebase compat SDK (simple to use in vanilla apps) -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeMaster Academy - Learn Programming</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .admin-edit {
+            border: 2px dashed #3b82f6;
+            position: relative;
+        }
+        .admin-edit::after {
+            content: "✏️ Editable";
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #3b82f6;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+        }
+    </style>
 </head>
-<body>
-  <header class="topbar">
-    <div class="brand">TeachCode</div>
-    <nav>
-      <button id="btn-home">Home</button>
-      <button id="btn-dashboard" style="display:none">Dashboard</button>
-      <button id="btn-admin" style="display:none">Admin</button>
-      <button id="btn-login">Login</button>
-      <button id="btn-logout" style="display:none">Logout</button>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <div class="text-2xl">💻</div>
+                    <h1 class="text-2xl font-bold text-gray-800" id="site-title">CodeMaster Academy</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="showLogin()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Login</button>
+                    <button onclick="showRegister()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Register</button>
+                    <div id="user-menu" class="hidden">
+                        <span id="welcome-text" class="text-gray-700 mr-4"></span>
+                        <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </nav>
-  </header>
 
-  <main class="container">
-    <!-- AUTH MODALS / FORMS -->
-    <section id="auth-section" class="card">
-      <h2>Login / Register</h2>
-      <div class="row">
-        <form id="loginForm">
-          <h3>Login</h3>
-          <input id="loginEmail" placeholder="Email" type="email" required />
-          <input id="loginPassword" placeholder="Password" type="password" required />
-          <button type="submit">Login</button>
-        </form>
-
-        <form id="registerForm">
-          <h3>Register</h3>
-          <input id="regName" placeholder="Full name" required />
-          <input id="regEmail" placeholder="Email" type="email" required />
-          <input id="regPassword" placeholder="Password" type="password" required />
-          <button type="submit">Register</button>
-        </form>
-      </div>
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-5xl font-bold mb-6" id="hero-title">Master Programming Skills</h2>
+            <p class="text-xl mb-8 max-w-3xl mx-auto" id="hero-subtitle">Join thousands of students learning C/C++, Java, HTML, CSS, JavaScript, Python and more with our comprehensive courses and expert instructors.</p>
+            <button onclick="scrollToCourses()" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition text-lg">Explore Courses</button>
+        </div>
     </section>
 
-    <!-- COURSE LIST -->
-    <section id="courses-section" class="card">
-      <h2>Available Courses</h2>
-      <div id="coursesList" class="grid"></div>
+    <!-- Courses Section -->
+    <section id="courses" class="py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <h3 class="text-4xl font-bold text-center mb-12 text-gray-800" id="courses-title">Our Programming Courses</h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="courses-grid">
+                <!-- Courses will be populated by JavaScript -->
+            </div>
+        </div>
     </section>
 
-    <!-- STUDENT DASHBOARD -->
-    <section id="dashboard-section" class="card" style="display:none">
-      <h2>Your Enrollments</h2>
-      <div id="enrollmentsList"></div>
+    <!-- Features Section -->
+    <section class="bg-white py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <h3 class="text-4xl font-bold text-center mb-12 text-gray-800" id="features-title">Why Choose CodeMaster Academy?</h3>
+            <div class="grid md:grid-cols-3 gap-8" id="features-grid">
+                <div class="text-center p-6">
+                    <div class="text-4xl mb-4">🎯</div>
+                    <h4 class="text-xl font-semibold mb-3">Expert Instructors</h4>
+                    <p class="text-gray-600">Learn from industry professionals with years of experience</p>
+                </div>
+                <div class="text-center p-6">
+                    <div class="text-4xl mb-4">📚</div>
+                    <h4 class="text-xl font-semibold mb-3">Comprehensive Curriculum</h4>
+                    <p class="text-gray-600">From basics to advanced concepts, we cover everything</p>
+                </div>
+                <div class="text-center p-6">
+                    <div class="text-4xl mb-4">🏆</div>
+                    <h4 class="text-xl font-semibold mb-3">Certification</h4>
+                    <p class="text-gray-600">Get industry-recognized certificates upon completion</p>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <!-- ADMIN PANEL -->
-    <section id="admin-section" class="card" style="display:none">
-      <h2>Admin — Manage Courses</h2>
-      <form id="courseForm">
-        <input id="courseId" type="hidden" />
-        <input id="courseTitle" placeholder="Course title" required />
-        <input id="courseCategory" placeholder="Category (C/C++, HTML, Java...)" />
-        <textarea id="courseDesc" placeholder="Short description"></textarea>
-        <input id="coursePrice" placeholder="Price (number)" type="number" min="0" />
-        <button type="submit">Save Course</button>
-        <button id="cancelEdit" type="button" style="display:none">Cancel</button>
-      </form>
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+            <h3 class="text-2xl font-bold mb-6 text-center">Login</h3>
+            <form id="login-form">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">User ID / Email</label>
+                    <input type="text" id="login-id" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                    <input type="password" id="login-password" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">Login</button>
+                    <button type="button" onclick="closeModal('login-modal')" class="text-gray-600 hover:text-gray-800">Cancel</button>
+                </div>
+            </form>
+            <div class="mt-4 text-sm text-gray-600">
+                <p><strong>Demo Credentials:</strong></p>
+                <p>Student: student123 / password123</p>
+                <p>Admin: admin / admin123</p>
+            </div>
+        </div>
+    </div>
 
-      <h3>All courses</h3>
-      <div id="adminCourses"></div>
-    </section>
-  </main>
+    <!-- Register Modal -->
+    <div id="register-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+            <h3 class="text-2xl font-bold mb-6 text-center">Register</h3>
+            <form id="register-form">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Full Name</label>
+                    <input type="text" id="reg-name" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <input type="email" id="reg-email" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                    <input type="password" id="reg-password" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Phone Number</label>
+                    <input type="tel" id="reg-phone" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">Register</button>
+                    <button type="button" onclick="closeModal('register-modal')" class="text-gray-600 hover:text-gray-800">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-  <footer class="footer">
-    © TeachCode — build: MVP
-  </footer>
+    <!-- Course Enrollment Modal -->
+    <div id="enrollment-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
+            <h3 class="text-2xl font-bold mb-6 text-center">Course Enrollment</h3>
+            <div id="enrollment-content">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
 
-  <script src="script.js"></script>
-</body>
+    <!-- Admin Panel -->
+    <div id="admin-panel" class="fixed inset-0 bg-white hidden z-50 overflow-y-auto">
+        <div class="bg-blue-600 text-white p-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-2xl font-bold">Admin Panel</h2>
+                <button onclick="closeAdminPanel()" class="bg-red-600 px-4 py-2 rounded hover:bg-red-700">Close</button>
+            </div>
+        </div>
+        
+        <div class="p-6">
+            <div class="grid md:grid-cols-4 gap-4 mb-8">
+                <button onclick="showAdminSection('content')" class="bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700">Edit Content</button>
+                <button onclick="showAdminSection('courses')" class="bg-green-600 text-white p-4 rounded-lg hover:bg-green-700">Manage Courses</button>
+                <button onclick="showAdminSection('tests')" class="bg-purple-600 text-white p-4 rounded-lg hover:bg-purple-700">Manage Tests</button>
+                <button onclick="showAdminSection('students')" class="bg-orange-600 text-white p-4 rounded-lg hover:bg-orange-700">View Students</button>
+            </div>
+
+            <!-- Content Management -->
+            <div id="admin-content" class="admin-section hidden">
+                <h3 class="text-xl font-bold mb-4">Edit Website Content</h3>
+                <div class="grid gap-4">
+                    <div>
+                        <label class="block font-semibold mb-2">Site Title</label>
+                        <input type="text" id="edit-site-title" class="w-full p-2 border rounded" value="CodeMaster Academy">
+                        <button onclick="updateContent('site-title', 'edit-site-title')" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Update</button>
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-2">Hero Title</label>
+                        <input type="text" id="edit-hero-title" class="w-full p-2 border rounded" value="Master Programming Skills">
+                        <button onclick="updateContent('hero-title', 'edit-hero-title')" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Update</button>
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-2">Hero Subtitle</label>
+                        <textarea id="edit-hero-subtitle" class="w-full p-2 border rounded h-20">Join thousands of students learning C/C++, Java, HTML, CSS, JavaScript, Python and more with our comprehensive courses and expert instructors.</textarea>
+                        <button onclick="updateContent('hero-subtitle', 'edit-hero-subtitle')" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Update</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Management -->
+            <div id="admin-courses" class="admin-section hidden">
+                <h3 class="text-xl font-bold mb-4">Manage Courses</h3>
+                <button onclick="showAddCourseForm()" class="bg-green-600 text-white px-4 py-2 rounded mb-4">Add New Course</button>
+                <div id="course-management-list">
+                    <!-- Course list will be populated -->
+                </div>
+                
+                <!-- Add Course Form -->
+                <div id="add-course-form" class="hidden mt-6 p-4 border rounded">
+                    <h4 class="font-bold mb-4">Add New Course</h4>
+                    <div class="grid gap-4">
+                        <input type="text" id="new-course-name" placeholder="Course Name" class="p-2 border rounded">
+                        <textarea id="new-course-desc" placeholder="Course Description" class="p-2 border rounded h-20"></textarea>
+                        <input type="number" id="new-course-price" placeholder="Price" class="p-2 border rounded">
+                        <input type="text" id="new-course-duration" placeholder="Duration" class="p-2 border rounded">
+                        <input type="text" id="new-course-level" placeholder="Level" class="p-2 border rounded">
+                        <div class="flex gap-2">
+                            <button onclick="addNewCourse()" class="bg-green-600 text-white px-4 py-2 rounded">Add Course</button>
+                            <button onclick="hideAddCourseForm()" class="bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Management -->
+            <div id="admin-tests" class="admin-section hidden">
+                <h3 class="text-xl font-bold mb-4">Manage Entrance Tests</h3>
+                <button onclick="showAddTestForm()" class="bg-purple-600 text-white px-4 py-2 rounded mb-4">Add New Test</button>
+                <div id="test-management-list">
+                    <!-- Test list will be populated -->
+                </div>
+                
+                <!-- Add Test Form -->
+                <div id="add-test-form" class="hidden mt-6 p-4 border rounded">
+                    <h4 class="font-bold mb-4">Create Entrance Test</h4>
+                    <div class="grid gap-4">
+                        <input type="text" id="new-test-course" placeholder="Course Name" class="p-2 border rounded">
+                        <input type="text" id="new-test-question" placeholder="Question" class="p-2 border rounded">
+                        <input type="text" id="new-test-option1" placeholder="Option 1" class="p-2 border rounded">
+                        <input type="text" id="new-test-option2" placeholder="Option 2" class="p-2 border rounded">
+                        <input type="text" id="new-test-option3" placeholder="Option 3" class="p-2 border rounded">
+                        <input type="text" id="new-test-option4" placeholder="Option 4" class="p-2 border rounded">
+                        <select id="new-test-correct" class="p-2 border rounded">
+                            <option value="">Select Correct Answer</option>
+                            <option value="1">Option 1</option>
+                            <option value="2">Option 2</option>
+                            <option value="3">Option 3</option>
+                            <option value="4">Option 4</option>
+                        </select>
+                        <div class="flex gap-2">
+                            <button onclick="addNewTest()" class="bg-purple-600 text-white px-4 py-2 rounded">Add Question</button>
+                            <button onclick="hideAddTestForm()" class="bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Management -->
+            <div id="admin-students" class="admin-section hidden">
+                <h3 class="text-xl font-bold mb-4">Enrolled Students</h3>
+                <div id="student-list">
+                    <!-- Student list will be populated -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Modal -->
+    <div id="test-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
+            <h3 class="text-2xl font-bold mb-6 text-center">Entrance Test</h3>
+            <div id="test-content">
+                <!-- Test content will be populated -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let currentUser = null;
+        let isAdmin = false;
+        let courses = [
+            {
+                id: 1,
+                name: "C/C++ Programming",
+                description: "Master the fundamentals of C and C++ programming languages",
+                price: 299,
+                duration: "8 weeks",
+                level: "Beginner to Advanced",
+                icon: "⚡",
+                registrationFee: 50,
+                courseFee: 249,
+                otherFees: 25
+            },
+            {
+                id: 2,
+                name: "Java Development",
+                description: "Complete Java programming from basics to enterprise applications",
+                price: 399,
+                duration: "10 weeks",
+                level: "Beginner to Advanced",
+                icon: "☕",
+                registrationFee: 50,
+                courseFee: 324,
+                otherFees: 25
+            },
+            {
+                id: 3,
+                name: "Web Development (HTML/CSS/JS)",
+                description: "Build modern websites with HTML, CSS, and JavaScript",
+                price: 349,
+                duration: "12 weeks",
+                level: "Beginner to Intermediate",
+                icon: "🌐",
+                registrationFee: 50,
+                courseFee: 274,
+                otherFees: 25
+            },
+            {
+                id: 4,
+                name: "Python Programming",
+                description: "Learn Python for web development, data science, and automation",
+                price: 329,
+                duration: "9 weeks",
+                level: "Beginner to Advanced",
+                icon: "🐍",
+                registrationFee: 50,
+                courseFee: 254,
+                otherFees: 25
+            },
+            {
+                id: 5,
+                name: "Data Structures & Algorithms",
+                description: "Master DSA concepts essential for technical interviews",
+                price: 449,
+                duration: "14 weeks",
+                level: "Intermediate to Advanced",
+                icon: "🧮",
+                registrationFee: 50,
+                courseFee: 374,
+                otherFees: 25
+            },
+            {
+                id: 6,
+                name: "Database Management (SQL)",
+                description: "Learn database design and SQL query optimization",
+                price: 279,
+                duration: "6 weeks",
+                level: "Beginner to Intermediate",
+                icon: "🗄️",
+                registrationFee: 50,
+                courseFee: 204,
+                otherFees: 25
+            }
+        ];
+
+        let students = [];
+        let tests = {
+            "C/C++ Programming": [
+                {
+                    question: "What is the correct syntax to declare a variable in C++?",
+                    options: ["int x;", "variable int x;", "declare int x;", "x int;"],
+                    correct: 1
+                }
+            ],
+            "Java Development": [
+                {
+                    question: "Which keyword is used to create a class in Java?",
+                    options: ["class", "Class", "create", "new"],
+                    correct: 1
+                }
+            ]
+        };
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCourses();
+            loadStoredData();
+        });
+
+        function loadStoredData() {
+            const storedStudents = localStorage.getItem('codemaster_students');
+            if (storedStudents) {
+                students = JSON.parse(storedStudents);
+            }
+            
+            const storedCourses = localStorage.getItem('codemaster_courses');
+            if (storedCourses) {
+                courses = JSON.parse(storedCourses);
+                renderCourses();
+            }
+            
+            const storedTests = localStorage.getItem('codemaster_tests');
+            if (storedTests) {
+                tests = JSON.parse(storedTests);
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('codemaster_students', JSON.stringify(students));
+            localStorage.setItem('codemaster_courses', JSON.stringify(courses));
+            localStorage.setItem('codemaster_tests', JSON.stringify(tests));
+        }
+
+        function renderCourses() {
+            const coursesGrid = document.getElementById('courses-grid');
+            coursesGrid.innerHTML = courses.map(course => `
+                <div class="bg-white rounded-lg shadow-lg p-6 card-hover ${isAdmin ? 'admin-edit' : ''}">
+                    <div class="text-4xl mb-4 text-center">${course.icon}</div>
+                    <h4 class="text-xl font-bold mb-3 text-gray-800">${course.name}</h4>
+                    <p class="text-gray-600 mb-4">${course.description}</p>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-500">Duration:</span>
+                            <span class="text-sm font-semibold">${course.duration}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-500">Level:</span>
+                            <span class="text-sm font-semibold">${course.level}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-500">Total Price:</span>
+                            <span class="text-lg font-bold text-green-600">$${course.price}</span>
+                        </div>
+                    </div>
+                    <button onclick="enrollInCourse(${course.id})" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition font-semibold">
+                        Enroll Now
+                    </button>
+                    ${isAdmin ? `
+                        <div class="mt-2 flex gap-2">
+                            <button onclick="editCourse(${course.id})" class="flex-1 bg-yellow-600 text-white py-1 px-2 rounded text-sm">Edit</button>
+                            <button onclick="deleteCourse(${course.id})" class="flex-1 bg-red-600 text-white py-1 px-2 rounded text-sm">Delete</button>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function showLogin() {
+            document.getElementById('login-modal').classList.remove('hidden');
+        }
+
+        function showRegister() {
+            document.getElementById('register-modal').classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function scrollToCourses() {
+            document.getElementById('courses').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Login functionality
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const userId = document.getElementById('login-id').value;
+            const password = document.getElementById('login-password').value;
+
+            // Check admin credentials
+            if (userId === 'admin' && password === 'admin123') {
+                currentUser = { id: 'admin', name: 'Administrator', type: 'admin' };
+                isAdmin = true;
+                showAdminInterface();
+            } else if (userId === 'student123' && password === 'password123') {
+                // Demo student login
+                currentUser = { id: 'student123', name: 'Demo Student', type: 'student' };
+                isAdmin = false;
+                showUserInterface();
+            } else {
+                // Check registered students
+                const student = students.find(s => s.email === userId && s.password === password);
+                if (student) {
+                    currentUser = student;
+                    isAdmin = false;
+                    showUserInterface();
+                } else {
+                    alert('Invalid credentials. Use demo credentials or register first.');
+                }
+            }
+            
+            closeModal('login-modal');
+        });
+
+        // Registration functionality
+        document.getElementById('register-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            const phone = document.getElementById('reg-phone').value;
+
+            // Check if email already exists
+            if (students.find(s => s.email === email)) {
+                alert('Email already registered. Please use a different email.');
+                return;
+            }
+
+            const newStudent = {
+                id: 'STU' + Date.now(),
+                name: name,
+                email: email,
+                password: password,
+                phone: phone,
+                enrolledCourses: [],
+                registrationDate: new Date().toISOString()
+            };
+
+            students.push(newStudent);
+            saveData();
+            
+            alert('Registration successful! You can now login with your credentials.');
+            closeModal('register-modal');
+        });
+
+        function showUserInterface() {
+            document.querySelector('nav .flex.items-center.space-x-4').innerHTML = `
+                <div id="user-menu">
+                    <span id="welcome-text" class="text-gray-700 mr-4">Welcome, ${currentUser.name}!</span>
+                    <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">Logout</button>
+                </div>
+            `;
+        }
+
+        function showAdminInterface() {
+            document.querySelector('nav .flex.items-center.space-x-4').innerHTML = `
+                <div id="user-menu">
+                    <span id="welcome-text" class="text-gray-700 mr-4">Admin: ${currentUser.name}</span>
+                    <button onclick="showAdminPanel()" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition mr-2">Admin Panel</button>
+                    <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">Logout</button>
+                </div>
+            `;
+            renderCourses(); // Re-render with admin controls
+        }
+
+        function logout() {
+            currentUser = null;
+            isAdmin = false;
+            document.querySelector('nav .flex.items-center.space-x-4').innerHTML = `
+                <button onclick="showLogin()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Login</button>
+                <button onclick="showRegister()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Register</button>
+            `;
+            renderCourses(); // Re-render without admin controls
+        }
+
+        function enrollInCourse(courseId) {
+            if (!currentUser) {
+                alert('Please login first to enroll in courses.');
+                showLogin();
+                return;
+            }
+
+            if (currentUser.type === 'admin') {
+                alert('Admins cannot enroll in courses.');
+                return;
+            }
+
+            const course = courses.find(c => c.id === courseId);
+            if (!course) return;
+
+            // Check if entrance test exists
+            if (tests[course.name] && tests[course.name].length > 0) {
+                showEntranceTest(course);
+            } else {
+                showEnrollmentForm(course);
+            }
+        }
+
+        function showEntranceTest(course) {
+            const testQuestions = tests[course.name];
+            if (!testQuestions || testQuestions.length === 0) {
+                showEnrollmentForm(course);
+                return;
+            }
+
+            const testContent = document.getElementById('test-content');
+            testContent.innerHTML = `
+                <div class="mb-6">
+                    <h4 class="text-lg font-semibold mb-2">Entrance Test for ${course.name}</h4>
+                    <p class="text-gray-600">Please answer the following questions to proceed with enrollment:</p>
+                </div>
+                <form id="entrance-test-form">
+                    ${testQuestions.map((q, index) => `
+                        <div class="mb-6 p-4 border rounded">
+                            <h5 class="font-semibold mb-3">${index + 1}. ${q.question}</h5>
+                            ${q.options.map((option, optIndex) => `
+                                <label class="block mb-2">
+                                    <input type="radio" name="question_${index}" value="${optIndex + 1}" class="mr-2">
+                                    ${option}
+                                </label>
+                            `).join('')}
+                        </div>
+                    `).join('')}
+                    <div class="flex gap-4">
+                        <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">Submit Test</button>
+                        <button type="button" onclick="closeModal('test-modal')" class="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700">Cancel</button>
+                    </div>
+                </form>
+            `;
+
+            document.getElementById('entrance-test-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                let score = 0;
+                
+                testQuestions.forEach((q, index) => {
+                    const answer = formData.get(`question_${index}`);
+                    if (parseInt(answer) === q.correct) {
+                        score++;
+                    }
+                });
+
+                const percentage = (score / testQuestions.length) * 100;
+                if (percentage >= 60) {
+                    alert(`Congratulations! You passed the test with ${percentage.toFixed(1)}%. You can now proceed with enrollment.`);
+                    closeModal('test-modal');
+                    showEnrollmentForm(course);
+                } else {
+                    alert(`Sorry, you scored ${percentage.toFixed(1)}%. You need at least 60% to enroll. Please study more and try again.`);
+                    closeModal('test-modal');
+                }
+            });
+
+            document.getElementById('test-modal').classList.remove('hidden');
+        }
+
+        function showEnrollmentForm(course) {
+            const enrollmentContent = document.getElementById('enrollment-content');
+            enrollmentContent.innerHTML = `
+                <div class="mb-6">
+                    <h4 class="text-2xl font-bold mb-2">${course.name}</h4>
+                    <p class="text-gray-600">${course.description}</p>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                    <h5 class="font-semibold mb-3">Fee Breakdown:</h5>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span>Registration Fee:</span>
+                            <span class="font-semibold">$${course.registrationFee}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Course Fee:</span>
+                            <span class="font-semibold">$${course.courseFee}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Other Fees (Materials, Certificate):</span>
+                            <span class="font-semibold">$${course.otherFees}</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between text-lg font-bold">
+                            <span>Total Amount:</span>
+                            <span class="text-green-600">$${course.price}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="payment-form">
+                    <h5 class="font-semibold mb-3">Payment Information:</h5>
+                    <div class="grid gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Cardholder Name</label>
+                            <input type="text" class="w-full p-2 border rounded" placeholder="John Doe" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Card Number</label>
+                            <input type="text" class="w-full p-2 border rounded" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Expiry Date</label>
+                                <input type="text" class="w-full p-2 border rounded" placeholder="MM/YY" maxlength="5" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">CVV</label>
+                                <input type="text" class="w-full p-2 border rounded" placeholder="123" maxlength="3" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-yellow-50 border border-yellow-200 p-4 rounded mb-4">
+                        <p class="text-sm text-yellow-800">
+                            <strong>Demo Payment:</strong> This is a demonstration. No actual payment will be processed. 
+                            Use any test card details to proceed with enrollment.
+                        </p>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 font-semibold">
+                            Pay $${course.price} & Enroll
+                        </button>
+                        <button type="button" onclick="closeModal('enrollment-modal')" class="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            `;
+
+            document.getElementById('payment-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Simulate payment processing
+                const button = e.target.querySelector('button[type="submit"]');
+                button.textContent = 'Processing...';
+                button.disabled = true;
+                
+                setTimeout(() => {
+                    // Add course to student's enrolled courses
+                    if (currentUser.enrolledCourses) {
+                        currentUser.enrolledCourses.push({
+                            courseId: course.id,
+                            courseName: course.name,
+                            enrollmentDate: new Date().toISOString(),
+                            paymentAmount: course.price
+                        });
+                    }
+                    
+                    // Update student in the students array
+                    const studentIndex = students.findIndex(s => s.id === currentUser.id);
+                    if (studentIndex !== -1) {
+                        students[studentIndex] = currentUser;
+                        saveData();
+                    }
+                    
+                    alert(`Congratulations! You have successfully enrolled in ${course.name}. Payment of $${course.price} has been processed.`);
+                    closeModal('enrollment-modal');
+                }, 2000);
+            });
+
+            document.getElementById('enrollment-modal').classList.remove('hidden');
+        }
+
+        // Admin Panel Functions
+        function showAdminPanel() {
+            document.getElementById('admin-panel').classList.remove('hidden');
+            showAdminSection('content');
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('admin-panel').classList.add('hidden');
+        }
+
+        function showAdminSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.admin-section').forEach(s => s.classList.add('hidden'));
+            
+            // Show selected section
+            document.getElementById(`admin-${section}`).classList.remove('hidden');
+            
+            if (section === 'courses') {
+                populateCourseManagement();
+            } else if (section === 'tests') {
+                populateTestManagement();
+            } else if (section === 'students') {
+                populateStudentList();
+            }
+        }
+
+        function updateContent(elementId, inputId) {
+            const newValue = document.getElementById(inputId).value;
+            document.getElementById(elementId).textContent = newValue;
+            alert('Content updated successfully!');
+        }
+
+        function populateCourseManagement() {
+            const courseList = document.getElementById('course-management-list');
+            courseList.innerHTML = courses.map(course => `
+                <div class="border p-4 rounded mb-4">
+                    <h4 class="font-bold">${course.name}</h4>
+                    <p class="text-gray-600">${course.description}</p>
+                    <p class="font-semibold">Price: $${course.price}</p>
+                    <div class="mt-2 flex gap-2">
+                        <button onclick="editCourse(${course.id})" class="bg-blue-600 text-white px-3 py-1 rounded text-sm">Edit</button>
+                        <button onclick="deleteCourse(${course.id})" class="bg-red-600 text-white px-3 py-1 rounded text-sm">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function populateTestManagement() {
+            const testList = document.getElementById('test-management-list');
+            let html = '';
+            
+            Object.keys(tests).forEach(courseName => {
+                html += `<div class="border p-4 rounded mb-4">
+                    <h4 class="font-bold">${courseName}</h4>
+                    <p class="text-gray-600">${tests[courseName].length} questions</p>
+                    <div class="mt-2">
+                        ${tests[courseName].map((test, index) => `
+                            <div class="bg-gray-50 p-2 rounded mb-2">
+                                <p class="text-sm"><strong>Q${index + 1}:</strong> ${test.question}</p>
+                                <p class="text-xs text-gray-600">Correct: ${test.options[test.correct - 1]}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>`;
+            });
+            
+            testList.innerHTML = html || '<p class="text-gray-500">No tests created yet.</p>';
+        }
+
+        function populateStudentList() {
+            const studentList = document.getElementById('student-list');
+            studentList.innerHTML = students.map(student => `
+                <div class="border p-4 rounded mb-4">
+                    <h4 class="font-bold">${student.name}</h4>
+                    <p class="text-gray-600">Email: ${student.email}</p>
+                    <p class="text-gray-600">Phone: ${student.phone}</p>
+                    <p class="text-gray-600">Student ID: ${student.id}</p>
+                    <p class="text-gray-600">Registered: ${new Date(student.registrationDate).toLocaleDateString()}</p>
+                    ${student.enrolledCourses && student.enrolledCourses.length > 0 ? `
+                        <div class="mt-2">
+                            <p class="font-semibold">Enrolled Courses:</p>
+                            ${student.enrolledCourses.map(course => `
+                                <p class="text-sm text-blue-600">• ${course.courseName} (Paid: $${course.paymentAmount})</p>
+                            `).join('')}
+                        </div>
+                    ` : '<p class="text-sm text-gray-500">No courses enrolled</p>'}
+                </div>
+            `).join('') || '<p class="text-gray-500">No students registered yet.</p>';
+        }
+
+        function showAddCourseForm() {
+            document.getElementById('add-course-form').classList.remove('hidden');
+        }
+
+        function hideAddCourseForm() {
+            document.getElementById('add-course-form').classList.add('hidden');
+        }
+
+        function addNewCourse() {
+            const name = document.getElementById('new-course-name').value;
+            const description = document.getElementById('new-course-desc').value;
+            const price = parseInt(document.getElementById('new-course-price').value);
+            const duration = document.getElementById('new-course-duration').value;
+            const level = document.getElementById('new-course-level').value;
+
+            if (!name || !description || !price || !duration || !level) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            const newCourse = {
+                id: Date.now(),
+                name: name,
+                description: description,
+                price: price,
+                duration: duration,
+                level: level,
+                icon: "📚",
+                registrationFee: 50,
+                courseFee: price - 75,
+                otherFees: 25
+            };
+
+            courses.push(newCourse);
+            saveData();
+            renderCourses();
+            populateCourseManagement();
+            hideAddCourseForm();
+            
+            // Clear form
+            document.getElementById('new-course-name').value = '';
+            document.getElementById('new-course-desc').value = '';
+            document.getElementById('new-course-price').value = '';
+            document.getElementById('new-course-duration').value = '';
+            document.getElementById('new-course-level').value = '';
+            
+            alert('Course added successfully!');
+        }
+
+        function editCourse(courseId) {
+            const course = courses.find(c => c.id === courseId);
+            if (!course) return;
+
+            const newName = prompt('Course Name:', course.name);
+            if (newName === null) return;
+
+            const newDesc = prompt('Course Description:', course.description);
+            if (newDesc === null) return;
+
+            const newPrice = prompt('Course Price:', course.price);
+            if (newPrice === null) return;
+
+            course.name = newName;
+            course.description = newDesc;
+            course.price = parseInt(newPrice);
+            course.courseFee = course.price - 75;
+
+            saveData();
+            renderCourses();
+            populateCourseManagement();
+            alert('Course updated successfully!');
+        }
+
+        function deleteCourse(courseId) {
+            if (confirm('Are you sure you want to delete this course?')) {
+                courses = courses.filter(c => c.id !== courseId);
+                saveData();
+                renderCourses();
+                populateCourseManagement();
+                alert('Course deleted successfully!');
+            }
+        }
+
+        function showAddTestForm() {
+            document.getElementById('add-test-form').classList.remove('hidden');
+        }
+
+        function hideAddTestForm() {
+            document.getElementById('add-test-form').classList.add('hidden');
+        }
+
+        function addNewTest() {
+            const courseName = document.getElementById('new-test-course').value;
+            const question = document.getElementById('new-test-question').value;
+            const option1 = document.getElementById('new-test-option1').value;
+            const option2 = document.getElementById('new-test-option2').value;
+            const option3 = document.getElementById('new-test-option3').value;
+            const option4 = document.getElementById('new-test-option4').value;
+            const correct = document.getElementById('new-test-correct').value;
+
+            if (!courseName || !question || !option1 || !option2 || !option3 || !option4 || !correct) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            if (!tests[courseName]) {
+                tests[courseName] = [];
+            }
+
+            tests[courseName].push({
+                question: question,
+                options: [option1, option2, option3, option4],
+                correct: parseInt(correct)
+            });
+
+            saveData();
+            populateTestManagement();
+            hideAddTestForm();
+            
+            // Clear form
+            document.getElementById('new-test-course').value = '';
+            document.getElementById('new-test-question').value = '';
+            document.getElementById('new-test-option1').value = '';
+            document.getElementById('new-test-option2').value = '';
+            document.getElementById('new-test-option3').value = '';
+            document.getElementById('new-test-option4').value = '';
+            document.getElementById('new-test-correct').value = '';
+            
+            alert('Test question added successfully!');
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97ee5a62a0236ef4',t:'MTc1NzgzNjg1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
