@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeMaster Academy - Learn Programming</title>
+    <title>BittCode - Learn Programming</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .gradient-bg {
@@ -39,8 +39,12 @@
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center space-x-2">
-                    <div class="text-2xl">💻</div>
-                    <h1 class="text-2xl font-bold text-gray-800" id="site-title">CodeMaster Academy</h1>
+                    <div class="flex items-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-2 rounded-lg">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0L19.2 12l-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
+                        </svg>
+                        <span class="font-bold text-lg">Bitt</span><span class="font-light text-lg">Code</span>
+                    </div>
                 </div>
                 <div class="flex items-center space-x-4">
                     <button onclick="showLogin()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Login</button>
@@ -57,8 +61,8 @@
     <!-- Hero Section -->
     <section class="gradient-bg text-white py-20">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <h2 class="text-5xl font-bold mb-6" id="hero-title">Master Programming Skills</h2>
-            <p class="text-xl mb-8 max-w-3xl mx-auto" id="hero-subtitle">Join thousands of students learning C/C++, Java, HTML, CSS, JavaScript, Python and more with our comprehensive courses and expert instructors.</p>
+            <h2 class="text-5xl font-bold mb-6" id="hero-title">Master Programming Skills with BittCode</h2>
+            <p class="text-xl mb-8 max-w-3xl mx-auto" id="hero-subtitle">Join thousands of students learning C/C++, Java, HTML, CSS, JavaScript, Python and more with our comprehensive courses and expert instructors at BittCode Academy.</p>
             <div class="flex gap-4 justify-center">
                 <button onclick="scrollToCourses()" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition text-lg">Explore Courses</button>
                 <button onclick="showSampleTest()" class="bg-yellow-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-yellow-600 transition text-lg">📝 Take Sample Test</button>
@@ -79,7 +83,7 @@
     <!-- Features Section -->
     <section class="bg-white py-16">
         <div class="max-w-7xl mx-auto px-4">
-            <h3 class="text-4xl font-bold text-center mb-12 text-gray-800" id="features-title">Why Choose CodeMaster Academy?</h3>
+            <h3 class="text-4xl font-bold text-center mb-12 text-gray-800" id="features-title">Why Choose BittCode Academy?</h3>
             <div class="grid md:grid-cols-3 gap-8" id="features-grid">
                 <div class="text-center p-6">
                     <div class="text-4xl mb-4">🎯</div>
@@ -191,18 +195,35 @@
                 <div class="grid gap-4">
                     <div>
                         <label class="block font-semibold mb-2">Site Title</label>
-                        <input type="text" id="edit-site-title" class="w-full p-2 border rounded" value="CodeMaster Academy">
+                        <input type="text" id="edit-site-title" class="w-full p-2 border rounded" value="BittCode Academy">
                         <button onclick="updateContent('site-title', 'edit-site-title')" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Update</button>
                     </div>
                     <div>
                         <label class="block font-semibold mb-2">Hero Title</label>
-                        <input type="text" id="edit-hero-title" class="w-full p-2 border rounded" value="Master Programming Skills">
+                        <input type="text" id="edit-hero-title" class="w-full p-2 border rounded" value="Master Programming Skills with BittCode">
                         <button onclick="updateContent('hero-title', 'edit-hero-title')" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Update</button>
                     </div>
                     <div>
                         <label class="block font-semibold mb-2">Hero Subtitle</label>
-                        <textarea id="edit-hero-subtitle" class="w-full p-2 border rounded h-20">Join thousands of students learning C/C++, Java, HTML, CSS, JavaScript, Python and more with our comprehensive courses and expert instructors.</textarea>
+                        <textarea id="edit-hero-subtitle" class="w-full p-2 border rounded h-20">Join thousands of students learning C/C++, Java, HTML, CSS, JavaScript, Python and more with our comprehensive courses and expert instructors at BittCode Academy.</textarea>
                         <button onclick="updateContent('hero-subtitle', 'edit-hero-subtitle')" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Update</button>
+                    </div>
+                    
+                    <div class="border-t pt-4 mt-4">
+                        <h4 class="text-lg font-bold mb-3">💳 Payment Settings</h4>
+                        <div class="grid gap-4">
+                            <div>
+                                <label class="block font-semibold mb-2">UPI ID</label>
+                                <input type="text" id="edit-upi-id" class="w-full p-2 border rounded" value="nikhilprajapati2370@paytm">
+                                <button onclick="updatePaymentInfo()" class="mt-2 bg-green-600 text-white px-4 py-2 rounded">Update UPI ID</button>
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-2">QR Code Image URL</label>
+                                <input type="url" id="edit-qr-code" class="w-full p-2 border rounded" placeholder="https://example.com/qr-code.jpg">
+                                <button onclick="updateQRCode()" class="mt-2 bg-green-600 text-white px-4 py-2 rounded">Update QR Code</button>
+                                <p class="text-xs text-gray-600 mt-1">Upload your QR code image to a hosting service and paste the URL here</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -588,6 +609,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             renderCourses();
             loadStoredData();
+            loadAdminSettings();
         });
 
         function loadStoredData() {
@@ -704,7 +726,7 @@
             }
 
             // Validate admin registration
-            if (accountType === 'admin' && email !== 'nikhilprajapati2370@gmail.com') {
+            if (accountType === 'admin' && email !== 'nikhkr9628@gmail.com') {
                 alert('Admin registration is restricted. Only authorized email addresses can register as admin.');
                 return;
             }
@@ -878,24 +900,32 @@
                                 <span class="font-semibold">UPI Payment (Recommended)</span>
                             </div>
                             <p class="text-sm text-gray-600 mb-2">Pay directly to our UPI ID:</p>
-                            <div class="bg-gray-100 p-2 rounded font-mono text-sm">
-                                <strong>nikhilprajapati2370@paytm</strong>
-                                <button onclick="copyToClipboard('nikhilprajapati2370@paytm')" class="ml-2 text-blue-600 hover:text-blue-800">📋 Copy</button>
+                            <div class="bg-gray-100 p-2 rounded font-mono text-sm mb-3">
+                                <strong id="display-upi-id">nikhilprajapati2370@paytm</strong>
+                                <button onclick="copyToClipboard(document.getElementById('display-upi-id').textContent)" class="ml-2 text-blue-600 hover:text-blue-800">📋 Copy</button>
+                            </div>
+                            <div class="text-center">
+                                <div id="qr-code-section" class="bg-gray-100 border-2 border-dashed border-gray-300 p-4 rounded-lg">
+                                    <p class="text-gray-500 text-sm">QR Code will be displayed here</p>
+                                    <p class="text-xs text-gray-400 mt-1">(Admin can upload QR code)</p>
+                                </div>
                             </div>
                         </div>
                         
                         <div class="bg-white p-3 rounded border">
                             <div class="flex items-center mb-2">
-                                <span class="text-2xl mr-2">🏦</span>
-                                <span class="font-semibold">Bank Transfer</span>
+                                <span class="text-2xl mr-2">📱</span>
+                                <span class="font-semibold">Digital Wallet Payments</span>
                             </div>
-                            <div class="text-sm space-y-1">
-                                <p><strong>Account Name:</strong> Nikhil Prajapati</p>
-                                <p><strong>Account Number:</strong> 1234567890123456</p>
-                                <p><strong>IFSC Code:</strong> SBIN0001234</p>
-                                <p><strong>Bank:</strong> State Bank of India</p>
-                                <p><strong>Branch:</strong> Main Branch</p>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button class="bg-purple-600 text-white p-2 rounded text-sm font-medium hover:bg-purple-700">
+                                    📱 PhonePe
+                                </button>
+                                <button class="bg-blue-600 text-white p-2 rounded text-sm font-medium hover:bg-blue-700">
+                                    💳 Google Pay
+                                </button>
                             </div>
+                            <p class="text-xs text-gray-600 mt-2">Scan QR code or use UPI ID above</p>
                         </div>
                     </div>
                 </div>
@@ -908,8 +938,9 @@
                             <select id="payment-method" class="w-full p-2 border rounded" required>
                                 <option value="">Select Payment Method</option>
                                 <option value="upi">UPI Payment</option>
-                                <option value="bank">Bank Transfer</option>
-                                <option value="card">Credit/Debit Card</option>
+                                <option value="phonepe">PhonePe</option>
+                                <option value="googlepay">Google Pay</option>
+                                <option value="other">Other Digital Wallet</option>
                             </select>
                         </div>
                         <div>
@@ -1026,6 +1057,51 @@
             const newValue = document.getElementById(inputId).value;
             document.getElementById(elementId).textContent = newValue;
             alert('Content updated successfully!');
+        }
+
+        function updatePaymentInfo() {
+            const newUpiId = document.getElementById('edit-upi-id').value;
+            if (!newUpiId) {
+                alert('Please enter a valid UPI ID');
+                return;
+            }
+            
+            document.getElementById('display-upi-id').textContent = newUpiId;
+            localStorage.setItem('admin_upi_id', newUpiId);
+            alert('UPI ID updated successfully!');
+        }
+
+        function updateQRCode() {
+            const qrCodeUrl = document.getElementById('edit-qr-code').value;
+            if (!qrCodeUrl) {
+                alert('Please enter a valid QR code image URL');
+                return;
+            }
+            
+            const qrSection = document.getElementById('qr-code-section');
+            qrSection.innerHTML = `
+                <img src="${qrCodeUrl}" alt="Payment QR Code" class="max-w-48 max-h-48 mx-auto rounded-lg border" 
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <p class="text-red-500 text-sm mt-2 hidden">Failed to load QR code image</p>
+                <p class="text-xs text-gray-600 mt-2">Scan with any UPI app to pay</p>
+            `;
+            localStorage.setItem('admin_qr_code', qrCodeUrl);
+            alert('QR Code updated successfully!');
+        }
+
+        function loadAdminSettings() {
+            const savedUpiId = localStorage.getItem('admin_upi_id');
+            const savedQrCode = localStorage.getItem('admin_qr_code');
+            
+            if (savedUpiId) {
+                document.getElementById('edit-upi-id').value = savedUpiId;
+                document.getElementById('display-upi-id').textContent = savedUpiId;
+            }
+            
+            if (savedQrCode) {
+                document.getElementById('edit-qr-code').value = savedQrCode;
+                updateQRCode();
+            }
         }
 
         function populateCourseManagement() {
@@ -1402,5 +1478,5 @@
             `;
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97ee708415296ec4',t:'MTc1NzgzNzc1OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97ee7da741eb2e89',t:'MTc1NzgzODI5Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
