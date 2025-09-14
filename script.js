@@ -169,3 +169,16 @@ onAuthStateChanged(auth, async user => {
     currentIsAdmin = false;
   }
 });
+btn.addEventListener("click", async () => {
+  const val = Number(input.value);
+  if (isNaN(val)) return alert("Enter a number");
+  try {
+    console.log("Trying to update course:", id, "with fee", val);  // 👈 add
+    await updateDoc(doc(db, "courses", id), { fee: val });
+    console.log("Update success!");  // 👈 add
+    input.value = "";
+  } catch (e) {
+    console.error("Update failed", e);  // 👈 add
+    alert("Update failed: " + e.message);
+  }
+});
