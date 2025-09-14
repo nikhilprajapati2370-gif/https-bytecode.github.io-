@@ -1,51 +1,83 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TeachCode Academy</title>
-
-  <!-- Firebase SDKs -->
-  <script type="module">
-    // Import Firebase libraries from CDN
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-    // Make them available globally
-    window.initializeApp = initializeApp;
-    window.getAuth = getAuth;
-    window.getFirestore = getFirestore;
-  </script>
-
-  <!-- Your stylesheet -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TeachCode — Courses</title>
   <link rel="stylesheet" href="style.css" />
+  <!-- Firebase compat SDK (simple to use in vanilla apps) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <header>
-    <h1>Welcome to TeachCode Academy</h1>
+  <header class="topbar">
+    <div class="brand">TeachCode</div>
     <nav>
-      <button onclick="showLogin()">Login</button>
-      <button onclick="showRegister()">Register</button>
+      <button id="btn-home">Home</button>
+      <button id="btn-dashboard" style="display:none">Dashboard</button>
+      <button id="btn-admin" style="display:none">Admin</button>
+      <button id="btn-login">Login</button>
+      <button id="btn-logout" style="display:none">Logout</button>
     </nav>
   </header>
 
-  <main>
-    <section id="auth-section">
+  <main class="container">
+    <!-- AUTH MODALS / FORMS -->
+    <section id="auth-section" class="card">
       <h2>Login / Register</h2>
-      <input id="email" type="email" placeholder="Email" />
-      <input id="password" type="password" placeholder="Password" />
-      <button onclick="login()">Login</button>
-      <button onclick="register()">Register</button>
+      <div class="row">
+        <form id="loginForm">
+          <h3>Login</h3>
+          <input id="loginEmail" placeholder="Email" type="email" required />
+          <input id="loginPassword" placeholder="Password" type="password" required />
+          <button type="submit">Login</button>
+        </form>
+
+        <form id="registerForm">
+          <h3>Register</h3>
+          <input id="regName" placeholder="Full name" required />
+          <input id="regEmail" placeholder="Email" type="email" required />
+          <input id="regPassword" placeholder="Password" type="password" required />
+          <button type="submit">Register</button>
+        </form>
+      </div>
     </section>
 
-    <section id="courses">
-      <h2>Courses</h2>
-      <div id="course-list"></div>
+    <!-- COURSE LIST -->
+    <section id="courses-section" class="card">
+      <h2>Available Courses</h2>
+      <div id="coursesList" class="grid"></div>
+    </section>
+
+    <!-- STUDENT DASHBOARD -->
+    <section id="dashboard-section" class="card" style="display:none">
+      <h2>Your Enrollments</h2>
+      <div id="enrollmentsList"></div>
+    </section>
+
+    <!-- ADMIN PANEL -->
+    <section id="admin-section" class="card" style="display:none">
+      <h2>Admin — Manage Courses</h2>
+      <form id="courseForm">
+        <input id="courseId" type="hidden" />
+        <input id="courseTitle" placeholder="Course title" required />
+        <input id="courseCategory" placeholder="Category (C/C++, HTML, Java...)" />
+        <textarea id="courseDesc" placeholder="Short description"></textarea>
+        <input id="coursePrice" placeholder="Price (number)" type="number" min="0" />
+        <button type="submit">Save Course</button>
+        <button id="cancelEdit" type="button" style="display:none">Cancel</button>
+      </form>
+
+      <h3>All courses</h3>
+      <div id="adminCourses"></div>
     </section>
   </main>
 
-  <!-- Your script -->
-  <script src="script.js" type="module"></script>
+  <footer class="footer">
+    © TeachCode — build: MVP
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
