@@ -59,7 +59,10 @@
         <div class="max-w-7xl mx-auto px-4 text-center">
             <h2 class="text-5xl font-bold mb-6" id="hero-title">Master Programming Skills</h2>
             <p class="text-xl mb-8 max-w-3xl mx-auto" id="hero-subtitle">Join thousands of students learning C/C++, Java, HTML, CSS, JavaScript, Python and more with our comprehensive courses and expert instructors.</p>
-            <button onclick="scrollToCourses()" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition text-lg">Explore Courses</button>
+            <div class="flex gap-4 justify-center">
+                <button onclick="scrollToCourses()" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition text-lg">Explore Courses</button>
+                <button onclick="showSampleTest()" class="bg-yellow-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-yellow-600 transition text-lg">📝 Take Sample Test</button>
+            </div>
         </div>
     </section>
 
@@ -103,8 +106,8 @@
             <h3 class="text-2xl font-bold mb-6 text-center">Login</h3>
             <form id="login-form">
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">User ID / Email</label>
-                    <input type="text" id="login-id" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <input type="email" id="login-id" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
                 </div>
                 <div class="mb-6">
                     <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
@@ -115,11 +118,7 @@
                     <button type="button" onclick="closeModal('login-modal')" class="text-gray-600 hover:text-gray-800">Cancel</button>
                 </div>
             </form>
-            <div class="mt-4 text-sm text-gray-600">
-                <p><strong>Demo Credentials:</strong></p>
-                <p>Student: student123 / password123</p>
-                <p>Admin: admin / admin123</p>
-            </div>
+
         </div>
     </div>
 
@@ -140,9 +139,16 @@
                     <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
                     <input type="password" id="reg-password" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
                 </div>
-                <div class="mb-6">
+                <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2">Phone Number</label>
                     <input type="tel" id="reg-phone" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Account Type</label>
+                    <select id="reg-type" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                        <option value="student">Student</option>
+                        <option value="admin">Admin</option>
+                    </select>
                 </div>
                 <div class="flex items-center justify-between">
                     <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">Register</button>
@@ -236,24 +242,33 @@
                 
                 <!-- Add Test Form -->
                 <div id="add-test-form" class="hidden mt-6 p-4 border rounded">
-                    <h4 class="font-bold mb-4">Create Entrance Test</h4>
+                    <h4 class="font-bold mb-4">Create Entrance Test Question</h4>
                     <div class="grid gap-4">
-                        <input type="text" id="new-test-course" placeholder="Course Name" class="p-2 border rounded">
-                        <input type="text" id="new-test-question" placeholder="Question" class="p-2 border rounded">
-                        <input type="text" id="new-test-option1" placeholder="Option 1" class="p-2 border rounded">
-                        <input type="text" id="new-test-option2" placeholder="Option 2" class="p-2 border rounded">
-                        <input type="text" id="new-test-option3" placeholder="Option 3" class="p-2 border rounded">
-                        <input type="text" id="new-test-option4" placeholder="Option 4" class="p-2 border rounded">
+                        <select id="new-test-course" class="p-2 border rounded">
+                            <option value="">Select Course</option>
+                            <option value="C/C++ Programming">C/C++ Programming</option>
+                            <option value="Java Development">Java Development</option>
+                            <option value="Web Development (HTML/CSS/JS)">Web Development (HTML/CSS/JS)</option>
+                            <option value="Python Programming">Python Programming</option>
+                            <option value="Data Structures & Algorithms">Data Structures & Algorithms</option>
+                            <option value="Database Management (SQL)">Database Management (SQL)</option>
+                        </select>
+                        <textarea id="new-test-question" placeholder="Enter your question here..." class="p-2 border rounded h-20"></textarea>
+                        <input type="text" id="new-test-option1" placeholder="Option A" class="p-2 border rounded">
+                        <input type="text" id="new-test-option2" placeholder="Option B" class="p-2 border rounded">
+                        <input type="text" id="new-test-option3" placeholder="Option C" class="p-2 border rounded">
+                        <input type="text" id="new-test-option4" placeholder="Option D" class="p-2 border rounded">
                         <select id="new-test-correct" class="p-2 border rounded">
                             <option value="">Select Correct Answer</option>
-                            <option value="1">Option 1</option>
-                            <option value="2">Option 2</option>
-                            <option value="3">Option 3</option>
-                            <option value="4">Option 4</option>
+                            <option value="1">Option A</option>
+                            <option value="2">Option B</option>
+                            <option value="3">Option C</option>
+                            <option value="4">Option D</option>
                         </select>
+                        <textarea id="new-test-explanation" placeholder="Explanation for the correct answer (optional)" class="p-2 border rounded h-16"></textarea>
                         <div class="flex gap-2">
-                            <button onclick="addNewTest()" class="bg-purple-600 text-white px-4 py-2 rounded">Add Question</button>
-                            <button onclick="hideAddTestForm()" class="bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
+                            <button onclick="addNewTest()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Add Question</button>
+                            <button onclick="hideAddTestForm()" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -269,6 +284,16 @@
         </div>
     </div>
 
+    <!-- Course Details Modal -->
+    <div id="course-details-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-3xl w-full mx-4 max-h-screen overflow-y-auto">
+            <h3 class="text-2xl font-bold mb-6 text-center">Course Details</h3>
+            <div id="course-details-content">
+                <!-- Course details will be populated -->
+            </div>
+        </div>
+    </div>
+
     <!-- Test Modal -->
     <div id="test-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
         <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
@@ -279,82 +304,150 @@
         </div>
     </div>
 
+    <!-- Sample Test Modal -->
+    <div id="sample-test-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
+            <h3 class="text-2xl font-bold mb-6 text-center">Sample Programming Test</h3>
+            <div id="sample-test-content">
+                <!-- Sample test content will be populated -->
+            </div>
+        </div>
+    </div>
+
     <script>
         // Global state
         let currentUser = null;
         let isAdmin = false;
+
+        // Utility function to copy text to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                alert('UPI ID copied to clipboard!');
+            }).catch(function() {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('UPI ID copied to clipboard!');
+            });
+        }
         let courses = [
             {
                 id: 1,
                 name: "C/C++ Programming",
-                description: "Master the fundamentals of C and C++ programming languages",
-                price: 299,
+                description: "Master the fundamentals of C and C++ programming languages with hands-on projects",
+                price: 24999,
                 duration: "8 weeks",
                 level: "Beginner to Advanced",
                 icon: "⚡",
-                registrationFee: 50,
-                courseFee: 249,
-                otherFees: 25
+                registrationFee: 4999,
+                courseFee: 18000,
+                otherFees: 2000,
+                details: {
+                    modules: ["Basic C Syntax", "Pointers & Memory Management", "Object-Oriented Programming in C++", "STL & Data Structures", "File Handling", "Project Development"],
+                    prerequisites: "Basic computer knowledge",
+                    certification: "Industry-recognized certificate",
+                    instructor: "Prof. Rajesh Kumar (10+ years experience)",
+                    classSize: "Max 25 students per batch"
+                }
             },
             {
                 id: 2,
                 name: "Java Development",
-                description: "Complete Java programming from basics to enterprise applications",
-                price: 399,
+                description: "Complete Java programming from basics to enterprise applications with Spring Framework",
+                price: 32999,
                 duration: "10 weeks",
                 level: "Beginner to Advanced",
                 icon: "☕",
-                registrationFee: 50,
-                courseFee: 324,
-                otherFees: 25
+                registrationFee: 4999,
+                courseFee: 25000,
+                otherFees: 3000,
+                details: {
+                    modules: ["Java Fundamentals", "OOP Concepts", "Collections Framework", "Multithreading", "JDBC & Database", "Spring Boot", "REST APIs", "Project Work"],
+                    prerequisites: "Basic programming knowledge helpful",
+                    certification: "Oracle Java certification preparation",
+                    instructor: "Ms. Priya Sharma (8+ years industry experience)",
+                    classSize: "Max 20 students per batch"
+                }
             },
             {
                 id: 3,
                 name: "Web Development (HTML/CSS/JS)",
-                description: "Build modern websites with HTML, CSS, and JavaScript",
-                price: 349,
+                description: "Build modern responsive websites with HTML5, CSS3, JavaScript and popular frameworks",
+                price: 28999,
                 duration: "12 weeks",
                 level: "Beginner to Intermediate",
                 icon: "🌐",
-                registrationFee: 50,
-                courseFee: 274,
-                otherFees: 25
+                registrationFee: 4999,
+                courseFee: 22000,
+                otherFees: 2000,
+                details: {
+                    modules: ["HTML5 & Semantic Web", "CSS3 & Flexbox/Grid", "JavaScript ES6+", "DOM Manipulation", "React.js Basics", "Responsive Design", "Portfolio Projects"],
+                    prerequisites: "No prior experience required",
+                    certification: "Web Development Certificate",
+                    instructor: "Mr. Amit Patel (Frontend Developer at TCS)",
+                    classSize: "Max 30 students per batch"
+                }
             },
             {
                 id: 4,
                 name: "Python Programming",
-                description: "Learn Python for web development, data science, and automation",
-                price: 329,
+                description: "Learn Python for web development, data science, automation and machine learning basics",
+                price: 27999,
                 duration: "9 weeks",
                 level: "Beginner to Advanced",
                 icon: "🐍",
-                registrationFee: 50,
-                courseFee: 254,
-                otherFees: 25
+                registrationFee: 4999,
+                courseFee: 21000,
+                otherFees: 2000,
+                details: {
+                    modules: ["Python Basics", "Data Structures", "File Handling", "Web Scraping", "Django Framework", "Data Analysis with Pandas", "API Development", "ML Introduction"],
+                    prerequisites: "Basic computer skills",
+                    certification: "Python Institute certification prep",
+                    instructor: "Dr. Sneha Gupta (Data Scientist, 12+ years)",
+                    classSize: "Max 25 students per batch"
+                }
             },
             {
                 id: 5,
                 name: "Data Structures & Algorithms",
-                description: "Master DSA concepts essential for technical interviews",
-                price: 449,
+                description: "Master DSA concepts essential for technical interviews at top tech companies",
+                price: 36999,
                 duration: "14 weeks",
                 level: "Intermediate to Advanced",
                 icon: "🧮",
-                registrationFee: 50,
-                courseFee: 374,
-                otherFees: 25
+                registrationFee: 4999,
+                courseFee: 30000,
+                otherFees: 2000,
+                details: {
+                    modules: ["Arrays & Strings", "Linked Lists", "Stacks & Queues", "Trees & Graphs", "Dynamic Programming", "Sorting & Searching", "System Design Basics", "Interview Preparation"],
+                    prerequisites: "Knowledge of any programming language",
+                    certification: "DSA Mastery Certificate",
+                    instructor: "Mr. Vikash Singh (Ex-Google, 15+ years)",
+                    classSize: "Max 15 students per batch"
+                }
             },
             {
                 id: 6,
                 name: "Database Management (SQL)",
-                description: "Learn database design and SQL query optimization",
-                price: 279,
+                description: "Learn database design, SQL optimization, and work with MySQL, PostgreSQL, MongoDB",
+                price: 23999,
                 duration: "6 weeks",
                 level: "Beginner to Intermediate",
                 icon: "🗄️",
-                registrationFee: 50,
-                courseFee: 204,
-                otherFees: 25
+                registrationFee: 4999,
+                courseFee: 17000,
+                otherFees: 2000,
+                details: {
+                    modules: ["Database Fundamentals", "SQL Queries", "Joins & Subqueries", "Stored Procedures", "Database Design", "NoSQL Basics", "Performance Optimization"],
+                    prerequisites: "Basic computer knowledge",
+                    certification: "Database Administrator Certificate",
+                    instructor: "Ms. Kavita Joshi (DBA, 10+ years)",
+                    classSize: "Max 20 students per batch"
+                }
             }
         ];
 
@@ -364,17 +457,132 @@
                 {
                     question: "What is the correct syntax to declare a variable in C++?",
                     options: ["int x;", "variable int x;", "declare int x;", "x int;"],
-                    correct: 1
+                    correct: 1,
+                    explanation: "In C++, variables are declared with the data type followed by the variable name."
+                },
+                {
+                    question: "Which operator is used to access the value at the address stored in a pointer?",
+                    options: ["&", "*", "->", "::"],
+                    correct: 2,
+                    explanation: "The * operator is the dereference operator used to access the value at the address stored in a pointer."
+                },
+                {
+                    question: "What is the size of int data type in C++ (typically)?",
+                    options: ["2 bytes", "4 bytes", "8 bytes", "1 byte"],
+                    correct: 2,
+                    explanation: "On most modern systems, int is typically 4 bytes (32 bits)."
                 }
             ],
             "Java Development": [
                 {
                     question: "Which keyword is used to create a class in Java?",
                     options: ["class", "Class", "create", "new"],
-                    correct: 1
+                    correct: 1,
+                    explanation: "The 'class' keyword is used to define a class in Java."
+                },
+                {
+                    question: "What is the main method signature in Java?",
+                    options: ["public static void main(String args[])", "public void main(String args[])", "static void main(String args[])", "public main(String args[])"],
+                    correct: 1,
+                    explanation: "The main method must be public, static, void, and take String array as parameter."
+                },
+                {
+                    question: "Which of these is NOT a Java primitive data type?",
+                    options: ["int", "String", "boolean", "char"],
+                    correct: 2,
+                    explanation: "String is a class in Java, not a primitive data type."
+                }
+            ],
+            "Web Development (HTML/CSS/JS)": [
+                {
+                    question: "Which HTML tag is used to create a hyperlink?",
+                    options: ["<link>", "<a>", "<href>", "<url>"],
+                    correct: 2,
+                    explanation: "The <a> tag with href attribute is used to create hyperlinks."
+                },
+                {
+                    question: "Which CSS property is used to change the text color?",
+                    options: ["text-color", "color", "font-color", "text-style"],
+                    correct: 2,
+                    explanation: "The 'color' property is used to set the text color in CSS."
+                }
+            ],
+            "Python Programming": [
+                {
+                    question: "Which of the following is the correct way to create a list in Python?",
+                    options: ["list = []", "list = ()", "list = {}", "list = <>"],
+                    correct: 1,
+                    explanation: "Square brackets [] are used to create lists in Python."
+                },
+                {
+                    question: "What is the output of print(type([]))?",
+                    options: ["<class 'array'>", "<class 'list'>", "<class 'tuple'>", "<class 'dict'>"],
+                    correct: 2,
+                    explanation: "[] creates a list object, so type([]) returns <class 'list'>."
+                }
+            ],
+            "Data Structures & Algorithms": [
+                {
+                    question: "What is the time complexity of binary search?",
+                    options: ["O(n)", "O(log n)", "O(n²)", "O(1)"],
+                    correct: 2,
+                    explanation: "Binary search has O(log n) time complexity as it divides the search space in half each time."
+                },
+                {
+                    question: "Which data structure follows LIFO principle?",
+                    options: ["Queue", "Stack", "Array", "Linked List"],
+                    correct: 2,
+                    explanation: "Stack follows Last In First Out (LIFO) principle."
+                }
+            ],
+            "Database Management (SQL)": [
+                {
+                    question: "Which SQL command is used to retrieve data from a database?",
+                    options: ["GET", "SELECT", "RETRIEVE", "FETCH"],
+                    correct: 2,
+                    explanation: "SELECT is the SQL command used to retrieve data from database tables."
+                },
+                {
+                    question: "What does SQL stand for?",
+                    options: ["Structured Query Language", "Simple Query Language", "Standard Query Language", "System Query Language"],
+                    correct: 1,
+                    explanation: "SQL stands for Structured Query Language."
                 }
             ]
         };
+
+        let sampleTests = [
+            {
+                question: "What is the primary purpose of a compiler?",
+                options: ["To execute code", "To translate source code to machine code", "To debug programs", "To format code"],
+                correct: 2,
+                explanation: "A compiler translates high-level source code into machine code or bytecode."
+            },
+            {
+                question: "Which of the following is NOT a programming paradigm?",
+                options: ["Object-Oriented", "Functional", "Procedural", "Debugging"],
+                correct: 4,
+                explanation: "Debugging is a process, not a programming paradigm."
+            },
+            {
+                question: "What does 'IDE' stand for in programming?",
+                options: ["Integrated Development Environment", "Interactive Design Environment", "Internal Development Engine", "Intelligent Debug Environment"],
+                correct: 1,
+                explanation: "IDE stands for Integrated Development Environment - a software application providing comprehensive facilities for software development."
+            },
+            {
+                question: "Which data type would be most appropriate for storing a person's age?",
+                options: ["String", "Boolean", "Integer", "Float"],
+                correct: 3,
+                explanation: "Integer is most appropriate for age as it's a whole number."
+            },
+            {
+                question: "What is the result of 5 % 3 in most programming languages?",
+                options: ["1", "2", "1.67", "0"],
+                correct: 2,
+                explanation: "The modulo operator (%) returns the remainder of division. 5 divided by 3 is 1 remainder 2."
+            }
+        ];
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
@@ -424,12 +632,13 @@
                         </div>
                         <div class="flex justify-between">
                             <span class="text-sm text-gray-500">Total Price:</span>
-                            <span class="text-lg font-bold text-green-600">$${course.price}</span>
+                            <span class="text-lg font-bold text-green-600">₹${course.price.toLocaleString('en-IN')}</span>
                         </div>
                     </div>
-                    <button onclick="enrollInCourse(${course.id})" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition font-semibold">
-                        Enroll Now
-                    </button>
+                    <div class="flex gap-2 mb-3">
+                        <button onclick="showCourseDetails(${course.id})" class="flex-1 bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700 transition text-sm">View Details</button>
+                        <button onclick="enrollInCourse(${course.id})" class="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition text-sm font-semibold">Enroll Now</button>
+                    </div>
                     ${isAdmin ? `
                         <div class="mt-2 flex gap-2">
                             <button onclick="editCourse(${course.id})" class="flex-1 bg-yellow-600 text-white py-1 px-2 rounded text-sm">Edit</button>
@@ -459,32 +668,24 @@
         // Login functionality
         document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            const userId = document.getElementById('login-id').value;
+            const email = document.getElementById('login-id').value;
             const password = document.getElementById('login-password').value;
 
-            // Check admin credentials
-            if (userId === 'admin' && password === 'admin123') {
-                currentUser = { id: 'admin', name: 'Administrator', type: 'admin' };
-                isAdmin = true;
-                showAdminInterface();
-            } else if (userId === 'student123' && password === 'password123') {
-                // Demo student login
-                currentUser = { id: 'student123', name: 'Demo Student', type: 'student' };
-                isAdmin = false;
-                showUserInterface();
-            } else {
-                // Check registered students
-                const student = students.find(s => s.email === userId && s.password === password);
-                if (student) {
-                    currentUser = student;
+            // Check registered users (both students and admins)
+            const user = students.find(s => s.email === email && s.password === password);
+            if (user) {
+                currentUser = user;
+                if (user.type === 'admin') {
+                    isAdmin = true;
+                    showAdminInterface();
+                } else {
                     isAdmin = false;
                     showUserInterface();
-                } else {
-                    alert('Invalid credentials. Use demo credentials or register first.');
                 }
+                closeModal('login-modal');
+            } else {
+                alert('Invalid email or password. Please check your credentials or register first.');
             }
-            
-            closeModal('login-modal');
         });
 
         // Registration functionality
@@ -494,6 +695,7 @@
             const email = document.getElementById('reg-email').value;
             const password = document.getElementById('reg-password').value;
             const phone = document.getElementById('reg-phone').value;
+            const accountType = document.getElementById('reg-type').value;
 
             // Check if email already exists
             if (students.find(s => s.email === email)) {
@@ -501,20 +703,27 @@
                 return;
             }
 
-            const newStudent = {
-                id: 'STU' + Date.now(),
+            // Validate admin registration
+            if (accountType === 'admin' && email !== 'nikhilprajapati2370@gmail.com') {
+                alert('Admin registration is restricted. Only authorized email addresses can register as admin.');
+                return;
+            }
+
+            const newUser = {
+                id: (accountType === 'admin' ? 'ADM' : 'STU') + Date.now(),
                 name: name,
                 email: email,
                 password: password,
                 phone: phone,
+                type: accountType,
                 enrolledCourses: [],
                 registrationDate: new Date().toISOString()
             };
 
-            students.push(newStudent);
+            students.push(newUser);
             saveData();
             
-            alert('Registration successful! You can now login with your credentials.');
+            alert(`Registration successful! You can now login with your credentials as ${accountType}.`);
             closeModal('register-modal');
         });
 
@@ -642,57 +851,94 @@
                     <div class="space-y-2">
                         <div class="flex justify-between">
                             <span>Registration Fee:</span>
-                            <span class="font-semibold">$${course.registrationFee}</span>
+                            <span class="font-semibold">₹${course.registrationFee.toLocaleString('en-IN')}</span>
                         </div>
                         <div class="flex justify-between">
                             <span>Course Fee:</span>
-                            <span class="font-semibold">$${course.courseFee}</span>
+                            <span class="font-semibold">₹${course.courseFee.toLocaleString('en-IN')}</span>
                         </div>
                         <div class="flex justify-between">
                             <span>Other Fees (Materials, Certificate):</span>
-                            <span class="font-semibold">$${course.otherFees}</span>
+                            <span class="font-semibold">₹${course.otherFees.toLocaleString('en-IN')}</span>
                         </div>
                         <hr class="my-2">
                         <div class="flex justify-between text-lg font-bold">
                             <span>Total Amount:</span>
-                            <span class="text-green-600">$${course.price}</span>
+                            <span class="text-green-600">₹${course.price.toLocaleString('en-IN')}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg mb-6">
+                    <h5 class="font-semibold mb-3 text-blue-800">💳 Payment Options</h5>
+                    <div class="space-y-3">
+                        <div class="bg-white p-3 rounded border">
+                            <div class="flex items-center mb-2">
+                                <span class="text-2xl mr-2">📱</span>
+                                <span class="font-semibold">UPI Payment (Recommended)</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-2">Pay directly to our UPI ID:</p>
+                            <div class="bg-gray-100 p-2 rounded font-mono text-sm">
+                                <strong>nikhilprajapati2370@paytm</strong>
+                                <button onclick="copyToClipboard('nikhilprajapati2370@paytm')" class="ml-2 text-blue-600 hover:text-blue-800">📋 Copy</button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-3 rounded border">
+                            <div class="flex items-center mb-2">
+                                <span class="text-2xl mr-2">🏦</span>
+                                <span class="font-semibold">Bank Transfer</span>
+                            </div>
+                            <div class="text-sm space-y-1">
+                                <p><strong>Account Name:</strong> Nikhil Prajapati</p>
+                                <p><strong>Account Number:</strong> 1234567890123456</p>
+                                <p><strong>IFSC Code:</strong> SBIN0001234</p>
+                                <p><strong>Bank:</strong> State Bank of India</p>
+                                <p><strong>Branch:</strong> Main Branch</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <form id="payment-form">
-                    <h5 class="font-semibold mb-3">Payment Information:</h5>
+                    <h5 class="font-semibold mb-3">Payment Confirmation:</h5>
                     <div class="grid gap-4 mb-4">
                         <div>
-                            <label class="block text-sm font-medium mb-1">Cardholder Name</label>
-                            <input type="text" class="w-full p-2 border rounded" placeholder="John Doe" required>
+                            <label class="block text-sm font-medium mb-1">Payment Method</label>
+                            <select id="payment-method" class="w-full p-2 border rounded" required>
+                                <option value="">Select Payment Method</option>
+                                <option value="upi">UPI Payment</option>
+                                <option value="bank">Bank Transfer</option>
+                                <option value="card">Credit/Debit Card</option>
+                            </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium mb-1">Card Number</label>
-                            <input type="text" class="w-full p-2 border rounded" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                            <label class="block text-sm font-medium mb-1">Transaction ID / Reference Number</label>
+                            <input type="text" id="transaction-id" class="w-full p-2 border rounded" placeholder="Enter transaction ID after payment" required>
                         </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium mb-1">Expiry Date</label>
-                                <input type="text" class="w-full p-2 border rounded" placeholder="MM/YY" maxlength="5" required>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-1">CVV</label>
-                                <input type="text" class="w-full p-2 border rounded" placeholder="123" maxlength="3" required>
-                            </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Your Name</label>
+                            <input type="text" id="payer-name" class="w-full p-2 border rounded" value="${currentUser.name}" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Your Phone Number</label>
+                            <input type="tel" id="payer-phone" class="w-full p-2 border rounded" value="${currentUser.phone}" required>
                         </div>
                     </div>
                     
-                    <div class="bg-yellow-50 border border-yellow-200 p-4 rounded mb-4">
-                        <p class="text-sm text-yellow-800">
-                            <strong>Demo Payment:</strong> This is a demonstration. No actual payment will be processed. 
-                            Use any test card details to proceed with enrollment.
+                    <div class="bg-green-50 border border-green-200 p-4 rounded mb-4">
+                        <p class="text-sm text-green-800">
+                            <strong>Payment Instructions:</strong><br>
+                            1. Make payment using any of the above methods<br>
+                            2. Note down the transaction ID/reference number<br>
+                            3. Enter the transaction details below and submit<br>
+                            4. Your enrollment will be confirmed within 24 hours
                         </p>
                     </div>
 
                     <div class="flex gap-4">
                         <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 font-semibold">
-                            Pay $${course.price} & Enroll
+                            Confirm Payment & Enroll
                         </button>
                         <button type="button" onclick="closeModal('enrollment-modal')" class="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700">
                             Cancel
@@ -704,21 +950,36 @@
             document.getElementById('payment-form').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
+                const paymentMethod = document.getElementById('payment-method').value;
+                const transactionId = document.getElementById('transaction-id').value;
+                const payerName = document.getElementById('payer-name').value;
+                const payerPhone = document.getElementById('payer-phone').value;
+                
+                if (!paymentMethod || !transactionId || !payerName || !payerPhone) {
+                    alert('Please fill all payment details');
+                    return;
+                }
+                
                 // Simulate payment processing
                 const button = e.target.querySelector('button[type="submit"]');
                 button.textContent = 'Processing...';
                 button.disabled = true;
                 
                 setTimeout(() => {
-                    // Add course to student's enrolled courses
-                    if (currentUser.enrolledCourses) {
-                        currentUser.enrolledCourses.push({
-                            courseId: course.id,
-                            courseName: course.name,
-                            enrollmentDate: new Date().toISOString(),
-                            paymentAmount: course.price
-                        });
+                    // Add course to student's enrolled courses with payment details
+                    if (!currentUser.enrolledCourses) {
+                        currentUser.enrolledCourses = [];
                     }
+                    
+                    currentUser.enrolledCourses.push({
+                        courseId: course.id,
+                        courseName: course.name,
+                        enrollmentDate: new Date().toISOString(),
+                        paymentAmount: course.price,
+                        paymentMethod: paymentMethod,
+                        transactionId: transactionId,
+                        paymentStatus: 'Pending Verification'
+                    });
                     
                     // Update student in the students array
                     const studentIndex = students.findIndex(s => s.id === currentUser.id);
@@ -727,7 +988,7 @@
                         saveData();
                     }
                     
-                    alert(`Congratulations! You have successfully enrolled in ${course.name}. Payment of $${course.price} has been processed.`);
+                    alert(`Thank you! Your enrollment request for ${course.name} has been submitted.\n\nPayment Details:\n- Method: ${paymentMethod.toUpperCase()}\n- Transaction ID: ${transactionId}\n- Amount: ₹${course.price.toLocaleString('en-IN')}\n\nYour enrollment will be confirmed within 24 hours after payment verification.`);
                     closeModal('enrollment-modal');
                 }, 2000);
             });
@@ -773,7 +1034,7 @@
                 <div class="border p-4 rounded mb-4">
                     <h4 class="font-bold">${course.name}</h4>
                     <p class="text-gray-600">${course.description}</p>
-                    <p class="font-semibold">Price: $${course.price}</p>
+                    <p class="font-semibold">Price: ₹${course.price.toLocaleString('en-IN')}</p>
                     <div class="mt-2 flex gap-2">
                         <button onclick="editCourse(${course.id})" class="bg-blue-600 text-white px-3 py-1 rounded text-sm">Edit</button>
                         <button onclick="deleteCourse(${course.id})" class="bg-red-600 text-white px-3 py-1 rounded text-sm">Delete</button>
@@ -817,7 +1078,16 @@
                         <div class="mt-2">
                             <p class="font-semibold">Enrolled Courses:</p>
                             ${student.enrolledCourses.map(course => `
-                                <p class="text-sm text-blue-600">• ${course.courseName} (Paid: $${course.paymentAmount})</p>
+                                <div class="text-sm bg-gray-50 p-2 rounded mb-2">
+                                    <p class="text-blue-600 font-medium">• ${course.courseName}</p>
+                                    <p class="text-gray-600">Amount: ₹${course.paymentAmount.toLocaleString('en-IN')}</p>
+                                    <p class="text-gray-600">Method: ${course.paymentMethod ? course.paymentMethod.toUpperCase() : 'N/A'}</p>
+                                    <p class="text-gray-600">Transaction ID: ${course.transactionId || 'N/A'}</p>
+                                    <p class="text-${course.paymentStatus === 'Pending Verification' ? 'orange' : 'green'}-600">
+                                        Status: ${course.paymentStatus || 'Confirmed'}
+                                    </p>
+                                    <p class="text-gray-500 text-xs">Enrolled: ${new Date(course.enrollmentDate).toLocaleDateString()}</p>
+                                </div>
                             `).join('')}
                         </div>
                     ` : '<p class="text-sm text-gray-500">No courses enrolled</p>'}
@@ -955,6 +1225,182 @@
             
             alert('Test question added successfully!');
         }
+
+        // New functions for enhanced features
+        function showCourseDetails(courseId) {
+            const course = courses.find(c => c.id === courseId);
+            if (!course) return;
+
+            const detailsContent = document.getElementById('course-details-content');
+            detailsContent.innerHTML = `
+                <div class="mb-6">
+                    <div class="flex items-center mb-4">
+                        <div class="text-4xl mr-4">${course.icon}</div>
+                        <div>
+                            <h4 class="text-2xl font-bold">${course.name}</h4>
+                            <p class="text-gray-600">${course.level} • ${course.duration}</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 mb-4">${course.description}</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h5 class="font-bold mb-3 text-blue-800">📚 Course Modules</h5>
+                        <ul class="space-y-1">
+                            ${course.details.modules.map(module => `<li class="text-sm text-blue-700">• ${module}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h5 class="font-bold mb-3 text-green-800">ℹ️ Course Information</h5>
+                        <div class="space-y-2 text-sm">
+                            <p><strong>Prerequisites:</strong> ${course.details.prerequisites}</p>
+                            <p><strong>Instructor:</strong> ${course.details.instructor}</p>
+                            <p><strong>Class Size:</strong> ${course.details.classSize}</p>
+                            <p><strong>Certification:</strong> ${course.details.certification}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                    <h5 class="font-semibold mb-3">💰 Fee Structure</h5>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="flex justify-between">
+                            <span>Registration Fee:</span>
+                            <span class="font-semibold">₹${course.registrationFee.toLocaleString('en-IN')}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Course Fee:</span>
+                            <span class="font-semibold">₹${course.courseFee.toLocaleString('en-IN')}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Materials & Certificate:</span>
+                            <span class="font-semibold">₹${course.otherFees.toLocaleString('en-IN')}</span>
+                        </div>
+                        <div class="flex justify-between text-lg font-bold text-green-600">
+                            <span>Total Amount:</span>
+                            <span>₹${course.price.toLocaleString('en-IN')}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <button onclick="enrollInCourse(${course.id}); closeModal('course-details-modal')" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-semibold">
+                        Enroll Now
+                    </button>
+                    <button onclick="closeModal('course-details-modal')" class="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700">
+                        Close
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('course-details-modal').classList.remove('hidden');
+        }
+
+        function showSampleTest() {
+            const sampleTestContent = document.getElementById('sample-test-content');
+            sampleTestContent.innerHTML = `
+                <div class="mb-6">
+                    <p class="text-gray-600 mb-4">Test your basic programming knowledge with this sample test. This will give you an idea of the type of questions in our entrance tests.</p>
+                    <div class="bg-yellow-50 border border-yellow-200 p-3 rounded mb-4">
+                        <p class="text-sm text-yellow-800">
+                            <strong>Instructions:</strong> Answer all questions. You need 60% to pass. This is just a demo - no registration required!
+                        </p>
+                    </div>
+                </div>
+                <form id="sample-test-form">
+                    ${sampleTests.map((q, index) => `
+                        <div class="mb-6 p-4 border rounded-lg">
+                            <h5 class="font-semibold mb-3">${index + 1}. ${q.question}</h5>
+                            ${q.options.map((option, optIndex) => `
+                                <label class="block mb-2 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                                    <input type="radio" name="sample_question_${index}" value="${optIndex + 1}" class="mr-2">
+                                    <span class="font-medium">${String.fromCharCode(65 + optIndex)}.</span> ${option}
+                                </label>
+                            `).join('')}
+                        </div>
+                    `).join('')}
+                    <div class="flex gap-4">
+                        <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 font-semibold">Submit Test</button>
+                        <button type="button" onclick="closeModal('sample-test-modal')" class="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700">Cancel</button>
+                    </div>
+                </form>
+            `;
+
+            document.getElementById('sample-test-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                let score = 0;
+                let results = [];
+                
+                sampleTests.forEach((q, index) => {
+                    const answer = formData.get(`sample_question_${index}`);
+                    const isCorrect = parseInt(answer) === q.correct;
+                    if (isCorrect) score++;
+                    
+                    results.push({
+                        question: q.question,
+                        userAnswer: answer ? q.options[parseInt(answer) - 1] : 'Not answered',
+                        correctAnswer: q.options[q.correct - 1],
+                        isCorrect: isCorrect,
+                        explanation: q.explanation
+                    });
+                });
+
+                const percentage = (score / sampleTests.length) * 100;
+                showTestResults(score, sampleTests.length, percentage, results);
+            });
+
+            document.getElementById('sample-test-modal').classList.remove('hidden');
+        }
+
+        function showTestResults(score, total, percentage, results) {
+            const sampleTestContent = document.getElementById('sample-test-content');
+            const passed = percentage >= 60;
+            
+            sampleTestContent.innerHTML = `
+                <div class="text-center mb-6">
+                    <div class="text-6xl mb-4">${passed ? '🎉' : '📚'}</div>
+                    <h4 class="text-2xl font-bold mb-2 ${passed ? 'text-green-600' : 'text-orange-600'}">
+                        ${passed ? 'Congratulations!' : 'Keep Learning!'}
+                    </h4>
+                    <p class="text-lg mb-4">You scored ${score} out of ${total} (${percentage.toFixed(1)}%)</p>
+                    <div class="bg-${passed ? 'green' : 'orange'}-50 border border-${passed ? 'green' : 'orange'}-200 p-4 rounded-lg mb-6">
+                        <p class="text-${passed ? 'green' : 'orange'}-800">
+                            ${passed 
+                                ? 'Great job! You have a good foundation in programming concepts. Consider enrolling in our courses to advance your skills further.' 
+                                : 'Don\'t worry! Everyone starts somewhere. Our courses are designed to help you build strong programming fundamentals from the ground up.'}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h5 class="font-bold mb-4">📋 Detailed Results:</h5>
+                    <div class="space-y-4">
+                        ${results.map((result, index) => `
+                            <div class="border rounded-lg p-4 ${result.isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}">
+                                <div class="flex items-start mb-2">
+                                    <span class="text-lg mr-2">${result.isCorrect ? '✅' : '❌'}</span>
+                                    <div class="flex-1">
+                                        <p class="font-medium mb-2">${index + 1}. ${result.question}</p>
+                                        <p class="text-sm mb-1"><strong>Your answer:</strong> ${result.userAnswer}</p>
+                                        <p class="text-sm mb-2"><strong>Correct answer:</strong> ${result.correctAnswer}</p>
+                                        ${result.explanation ? `<p class="text-sm text-gray-600 italic">${result.explanation}</p>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="flex gap-4 justify-center">
+                    <button onclick="showSampleTest()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Retake Test</button>
+                    <button onclick="scrollToCourses(); closeModal('sample-test-modal')" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">View Courses</button>
+                    <button onclick="closeModal('sample-test-modal')" class="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700">Close</button>
+                </div>
+            `;
+        }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97ee5a62a0236ef4',t:'MTc1NzgzNjg1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97ee708415296ec4',t:'MTc1NzgzNzc1OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
