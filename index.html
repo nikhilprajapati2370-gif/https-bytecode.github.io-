@@ -63,9 +63,10 @@
         <div class="max-w-7xl mx-auto px-4 text-center">
             <h2 class="text-5xl font-bold mb-6" id="hero-title">Master Programming Skills with BittCode</h2>
             <p class="text-xl mb-8 max-w-3xl mx-auto" id="hero-subtitle">Join thousands of students learning C/C++, Java, HTML, CSS, JavaScript, Python and more with our comprehensive courses and expert instructors at BittCode Academy.</p>
-            <div class="flex gap-4 justify-center">
+            <div class="flex gap-4 justify-center flex-wrap">
                 <button onclick="scrollToCourses()" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition text-lg">Explore Courses</button>
                 <button onclick="showSampleTest()" class="bg-yellow-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-yellow-600 transition text-lg">📝 Take Sample Test</button>
+                <button onclick="showCodeEditor()" class="bg-green-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-600 transition text-lg">💻 Code Editor</button>
             </div>
         </div>
     </section>
@@ -182,11 +183,12 @@
         </div>
         
         <div class="p-6">
-            <div class="grid md:grid-cols-4 gap-4 mb-8">
+            <div class="grid md:grid-cols-5 gap-4 mb-8">
                 <button onclick="showAdminSection('content')" class="bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700">Edit Content</button>
                 <button onclick="showAdminSection('courses')" class="bg-green-600 text-white p-4 rounded-lg hover:bg-green-700">Manage Courses</button>
                 <button onclick="showAdminSection('tests')" class="bg-purple-600 text-white p-4 rounded-lg hover:bg-purple-700">Manage Tests</button>
-                <button onclick="showAdminSection('students')" class="bg-orange-600 text-white p-4 rounded-lg hover:bg-orange-700">View Students</button>
+                <button onclick="showAdminSection('students')" class="bg-orange-600 text-white p-4 rounded-lg hover:bg-orange-700">Student Management</button>
+                <button onclick="showAdminSection('lectures')" class="bg-indigo-600 text-white p-4 rounded-lg hover:bg-indigo-700">Video Lectures</button>
             </div>
 
             <!-- Content Management -->
@@ -214,14 +216,26 @@
                         <div class="grid gap-4">
                             <div>
                                 <label class="block font-semibold mb-2">UPI ID</label>
-                                <input type="text" id="edit-upi-id" class="w-full p-2 border rounded" value="nikhilprajapati2370@paytm">
-                                <button onclick="updatePaymentInfo()" class="mt-2 bg-green-600 text-white px-4 py-2 rounded">Update UPI ID</button>
+                                <input type="text" id="edit-upi-id" class="w-full p-2 border rounded" value="9628588145-2@ybl">
+                                <button onclick="updatePaymentInfo()" class="mt-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Update UPI ID</button>
+                                <p class="text-xs text-green-600 mt-1">✅ Current UPI ID: <span id="current-upi-display">9628588145-2@ybl</span></p>
                             </div>
                             <div>
-                                <label class="block font-semibold mb-2">QR Code Image URL</label>
-                                <input type="url" id="edit-qr-code" class="w-full p-2 border rounded" placeholder="https://example.com/qr-code.jpg">
-                                <button onclick="updateQRCode()" class="mt-2 bg-green-600 text-white px-4 py-2 rounded">Update QR Code</button>
-                                <p class="text-xs text-gray-600 mt-1">Upload your QR code image to a hosting service and paste the URL here</p>
+                                <label class="block font-semibold mb-2">QR Code Upload</label>
+                                <input type="file" id="qr-code-file" accept="image/*" class="w-full p-2 border rounded mb-2">
+                                <button onclick="uploadQRCode()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mr-2">Upload QR Code</button>
+                                <button onclick="removeQRCode()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Remove QR</button>
+                                <p class="text-xs text-gray-600 mt-1">Upload your payment QR code image (JPG, PNG, etc.)</p>
+                                <div id="qr-preview" class="mt-2 hidden">
+                                    <p class="text-sm font-medium text-green-600 mb-1">Current QR Code:</p>
+                                    <img id="qr-preview-img" class="max-w-32 max-h-32 border rounded" alt="QR Code Preview">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-2">Alternative: QR Code URL</label>
+                                <input type="url" id="edit-qr-url" class="w-full p-2 border rounded" placeholder="https://example.com/qr-code.jpg">
+                                <button onclick="updateQRCodeFromURL()" class="mt-2 bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Use URL</button>
+                                <p class="text-xs text-gray-600 mt-1">Or paste a direct image URL if you have one</p>
                             </div>
                         </div>
                     </div>
@@ -297,9 +311,48 @@
 
             <!-- Student Management -->
             <div id="admin-students" class="admin-section hidden">
-                <h3 class="text-xl font-bold mb-4">Enrolled Students</h3>
+                <h3 class="text-xl font-bold mb-4">Student Management</h3>
+                <div class="mb-4 flex gap-4">
+                    <button onclick="filterStudents('all')" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700" id="filter-all">All Students</button>
+                    <button onclick="filterStudents('paid')" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" id="filter-paid">Paid Students</button>
+                    <button onclick="filterStudents('pending')" class="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700" id="filter-pending">Pending Payment</button>
+                    <button onclick="filterStudents('banned')" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700" id="filter-banned">Banned Students</button>
+                </div>
                 <div id="student-list">
                     <!-- Student list will be populated -->
+                </div>
+            </div>
+
+            <!-- Video Lectures Management -->
+            <div id="admin-lectures" class="admin-section hidden">
+                <h3 class="text-xl font-bold mb-4">Video Lectures Management</h3>
+                <button onclick="showAddLectureForm()" class="bg-indigo-600 text-white px-4 py-2 rounded mb-4">Add New Lecture</button>
+                <div id="lecture-management-list">
+                    <!-- Lecture list will be populated -->
+                </div>
+                
+                <!-- Add Lecture Form -->
+                <div id="add-lecture-form" class="hidden mt-6 p-4 border rounded">
+                    <h4 class="font-bold mb-4">Add New Video Lecture</h4>
+                    <div class="grid gap-4">
+                        <select id="new-lecture-course" class="p-2 border rounded">
+                            <option value="">Select Course</option>
+                            <option value="C/C++ Programming">C/C++ Programming</option>
+                            <option value="Java Development">Java Development</option>
+                            <option value="Web Development (HTML/CSS/JS)">Web Development (HTML/CSS/JS)</option>
+                            <option value="Python Programming">Python Programming</option>
+                            <option value="Data Structures & Algorithms">Data Structures & Algorithms</option>
+                            <option value="Database Management (SQL)">Database Management (SQL)</option>
+                        </select>
+                        <input type="text" id="new-lecture-title" placeholder="Lecture Title" class="p-2 border rounded">
+                        <textarea id="new-lecture-description" placeholder="Lecture Description" class="p-2 border rounded h-20"></textarea>
+                        <input type="url" id="new-lecture-video" placeholder="Video URL (YouTube, Vimeo, etc.)" class="p-2 border rounded">
+                        <input type="number" id="new-lecture-duration" placeholder="Duration in minutes" class="p-2 border rounded">
+                        <div class="flex gap-2">
+                            <button onclick="addNewLecture()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Add Lecture</button>
+                            <button onclick="hideAddLectureForm()" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Cancel</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -331,6 +384,32 @@
             <h3 class="text-2xl font-bold mb-6 text-center">Sample Programming Test</h3>
             <div id="sample-test-content">
                 <!-- Sample test content will be populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Code Editor Modal -->
+    <div id="code-editor-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 max-w-7xl w-full mx-4 max-h-screen overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold">💻 BittCode Online Compiler</h3>
+                <button onclick="closeModal('code-editor-modal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <div id="code-editor-content">
+                <!-- Code editor content will be populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Lectures Modal -->
+    <div id="video-lectures-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-4xl w-full mx-4 max-h-screen overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold">🎥 Video Lectures</h3>
+                <button onclick="closeModal('video-lectures-modal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <div id="video-lectures-content">
+                <!-- Video lectures content will be populated -->
             </div>
         </div>
     </div>
@@ -473,6 +552,38 @@
         ];
 
         let students = [];
+        let videoLectures = {};
+        let codeTemplates = {
+            'c': `#include <stdio.h>
+
+int main() {
+    printf("Hello, World!\\n");
+    return 0;
+}`,
+            'cpp': `#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Hello, World!" << endl;
+    return 0;
+}`,
+            'java': `public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}`,
+            'python': `print("Hello, World!")`,
+            'javascript': `console.log("Hello, World!");`,
+            'html': `<!DOCTYPE html>
+<html>
+<head>
+    <title>My Page</title>
+</head>
+<body>
+    <h1>Hello, World!</h1>
+</body>
+</html>`
+        };
         let tests = {
             "C/C++ Programming": [
                 {
@@ -628,12 +739,18 @@
             if (storedTests) {
                 tests = JSON.parse(storedTests);
             }
+            
+            const storedLectures = localStorage.getItem('codemaster_lectures');
+            if (storedLectures) {
+                videoLectures = JSON.parse(storedLectures);
+            }
         }
 
         function saveData() {
             localStorage.setItem('codemaster_students', JSON.stringify(students));
             localStorage.setItem('codemaster_courses', JSON.stringify(courses));
             localStorage.setItem('codemaster_tests', JSON.stringify(tests));
+            localStorage.setItem('codemaster_lectures', JSON.stringify(videoLectures));
         }
 
         function renderCourses() {
@@ -696,6 +813,12 @@
             // Check registered users (both students and admins)
             const user = students.find(s => s.email === email && s.password === password);
             if (user) {
+                // Check if student is banned
+                if (user.status === 'banned') {
+                    alert(`Your account has been banned. Reason: ${user.banReason || 'Violation of terms'}. Please contact admin for more information.`);
+                    return;
+                }
+                
                 currentUser = user;
                 if (user.type === 'admin') {
                     isAdmin = true;
@@ -753,6 +876,7 @@
             document.querySelector('nav .flex.items-center.space-x-4').innerHTML = `
                 <div id="user-menu">
                     <span id="welcome-text" class="text-gray-700 mr-4">Welcome, ${currentUser.name}!</span>
+                    <button onclick="showVideoLectures()" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition mr-2">🎥 Lectures</button>
                     <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">Logout</button>
                 </div>
             `;
@@ -901,7 +1025,7 @@
                             </div>
                             <p class="text-sm text-gray-600 mb-2">Pay directly to our UPI ID:</p>
                             <div class="bg-gray-100 p-2 rounded font-mono text-sm mb-3">
-                                <strong id="display-upi-id">nikhilprajapati2370@paytm</strong>
+                                <strong id="display-upi-id">9628588145-2@ybl</strong>
                                 <button onclick="copyToClipboard(document.getElementById('display-upi-id').textContent)" class="ml-2 text-blue-600 hover:text-blue-800">📋 Copy</button>
                             </div>
                             <div class="text-center">
@@ -1050,6 +1174,8 @@
                 populateTestManagement();
             } else if (section === 'students') {
                 populateStudentList();
+            } else if (section === 'lectures') {
+                populateLectureManagement();
             }
         }
 
@@ -1060,7 +1186,7 @@
         }
 
         function updatePaymentInfo() {
-            const newUpiId = document.getElementById('edit-upi-id').value;
+            const newUpiId = document.getElementById('edit-upi-id').value.trim();
             if (!newUpiId) {
                 alert('Please enter a valid UPI ID');
                 return;
@@ -1072,48 +1198,151 @@
                 element.textContent = newUpiId;
             });
             
+            // Update current display
+            const currentDisplay = document.getElementById('current-upi-display');
+            if (currentDisplay) {
+                currentDisplay.textContent = newUpiId;
+            }
+            
             localStorage.setItem('admin_upi_id', newUpiId);
-            alert('UPI ID updated successfully! It will appear in all enrollment forms.');
+            alert('✅ UPI ID updated successfully! It will appear in all enrollment forms.');
         }
 
-        function updateQRCode() {
-            const qrCodeUrl = document.getElementById('edit-qr-code').value;
+        function uploadQRCode() {
+            const fileInput = document.getElementById('qr-code-file');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select a QR code image file first');
+                return;
+            }
+            
+            if (!file.type.startsWith('image/')) {
+                alert('Please select a valid image file');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Data = e.target.result;
+                
+                // Update QR code sections
+                updateQRCodeDisplay(base64Data);
+                
+                // Save to localStorage
+                localStorage.setItem('admin_qr_code', base64Data);
+                
+                // Show preview
+                const preview = document.getElementById('qr-preview');
+                const previewImg = document.getElementById('qr-preview-img');
+                preview.classList.remove('hidden');
+                previewImg.src = base64Data;
+                
+                alert('✅ QR Code uploaded successfully!');
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        function updateQRCodeFromURL() {
+            const qrCodeUrl = document.getElementById('edit-qr-url').value.trim();
             if (!qrCodeUrl) {
                 alert('Please enter a valid QR code image URL');
                 return;
             }
             
-            const qrSection = document.getElementById('qr-code-section');
-            qrSection.innerHTML = `
-                <img src="${qrCodeUrl}" alt="Payment QR Code" class="max-w-48 max-h-48 mx-auto rounded-lg border" 
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                <p class="text-red-500 text-sm mt-2 hidden">Failed to load QR code image</p>
-                <p class="text-xs text-gray-600 mt-2">Scan with any UPI app to pay</p>
-            `;
-            localStorage.setItem('admin_qr_code', qrCodeUrl);
-            alert('QR Code updated successfully!');
+            // Test if URL is accessible
+            const testImg = new Image();
+            testImg.onload = function() {
+                updateQRCodeDisplay(qrCodeUrl);
+                localStorage.setItem('admin_qr_code', qrCodeUrl);
+                
+                // Show preview
+                const preview = document.getElementById('qr-preview');
+                const previewImg = document.getElementById('qr-preview-img');
+                preview.classList.remove('hidden');
+                previewImg.src = qrCodeUrl;
+                
+                alert('✅ QR Code updated successfully!');
+            };
+            testImg.onerror = function() {
+                alert('❌ Failed to load image from URL. Please check the URL and try again.');
+            };
+            testImg.src = qrCodeUrl;
+        }
+
+        function updateQRCodeDisplay(imageSrc) {
+            const qrSections = document.querySelectorAll('#qr-code-section');
+            qrSections.forEach(section => {
+                section.innerHTML = `
+                    <img src="${imageSrc}" alt="Payment QR Code" class="max-w-48 max-h-48 mx-auto rounded-lg border shadow-md" 
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <p class="text-red-500 text-sm mt-2 hidden">Failed to load QR code image</p>
+                    <p class="text-xs text-gray-600 mt-2">Scan with any UPI app to pay</p>
+                `;
+            });
+        }
+
+        function removeQRCode() {
+            if (confirm('Are you sure you want to remove the QR code?')) {
+                localStorage.removeItem('admin_qr_code');
+                
+                // Reset QR sections
+                const qrSections = document.querySelectorAll('#qr-code-section');
+                qrSections.forEach(section => {
+                    section.innerHTML = `
+                        <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-4 rounded-lg">
+                            <p class="text-gray-500 text-sm">QR Code will be displayed here</p>
+                            <p class="text-xs text-gray-400 mt-1">(Admin can upload QR code)</p>
+                        </div>
+                    `;
+                });
+                
+                // Hide preview
+                document.getElementById('qr-preview').classList.add('hidden');
+                document.getElementById('qr-code-file').value = '';
+                document.getElementById('edit-qr-url').value = '';
+                
+                alert('✅ QR Code removed successfully!');
+            }
         }
 
         function loadAdminSettings() {
-            const savedUpiId = localStorage.getItem('admin_upi_id');
+            const savedUpiId = localStorage.getItem('admin_upi_id') || '9628588145-2@ybl';
             const savedQrCode = localStorage.getItem('admin_qr_code');
             
-            if (savedUpiId) {
-                document.getElementById('edit-upi-id').value = savedUpiId;
-                const displayElements = document.querySelectorAll('#display-upi-id');
-                displayElements.forEach(element => {
-                    element.textContent = savedUpiId;
-                });
+            // Update UPI ID fields
+            const editUpiField = document.getElementById('edit-upi-id');
+            if (editUpiField) {
+                editUpiField.value = savedUpiId;
             }
             
+            const displayElements = document.querySelectorAll('#display-upi-id');
+            displayElements.forEach(element => {
+                element.textContent = savedUpiId;
+            });
+            
+            const currentDisplay = document.getElementById('current-upi-display');
+            if (currentDisplay) {
+                currentDisplay.textContent = savedUpiId;
+            }
+            
+            // Update QR Code if exists
             if (savedQrCode) {
-                document.getElementById('edit-qr-code').value = savedQrCode;
-                updateQRCode();
+                updateQRCodeDisplay(savedQrCode);
+                
+                // Show preview in admin panel
+                const preview = document.getElementById('qr-preview');
+                const previewImg = document.getElementById('qr-preview-img');
+                if (preview && previewImg) {
+                    preview.classList.remove('hidden');
+                    previewImg.src = savedQrCode;
+                }
             }
         }
 
         function openPhonePe(amount) {
-            const upiId = localStorage.getItem('admin_upi_id') || 'nikhilprajapati2370@paytm';
+            const upiId = localStorage.getItem('admin_upi_id') || '9628588145-2@ybl';
             const merchantName = 'BittCode Academy';
             
             // PhonePe UPI URL format
@@ -1129,7 +1358,7 @@
         }
 
         function openGooglePay(amount) {
-            const upiId = localStorage.getItem('admin_upi_id') || 'nikhilprajapati2370@paytm';
+            const upiId = localStorage.getItem('admin_upi_id') || '9628588145-2@ybl';
             const merchantName = 'BittCode Academy';
             
             // Google Pay UPI URL format
@@ -1181,34 +1410,297 @@
             testList.innerHTML = html || '<p class="text-gray-500">No tests created yet.</p>';
         }
 
-        function populateStudentList() {
+        function populateStudentList(filter = 'all') {
+            let filteredStudents = students.filter(student => student.type !== 'admin');
+            
+            if (filter === 'paid') {
+                filteredStudents = filteredStudents.filter(student => 
+                    student.enrolledCourses && student.enrolledCourses.some(course => 
+                        course.paymentStatus === 'Confirmed' || course.paymentStatus === 'Approved'
+                    )
+                );
+            } else if (filter === 'pending') {
+                filteredStudents = filteredStudents.filter(student => 
+                    student.enrolledCourses && student.enrolledCourses.some(course => 
+                        course.paymentStatus === 'Pending Verification'
+                    )
+                );
+            } else if (filter === 'banned') {
+                filteredStudents = filteredStudents.filter(student => student.status === 'banned');
+            }
+
             const studentList = document.getElementById('student-list');
-            studentList.innerHTML = students.map(student => `
-                <div class="border p-4 rounded mb-4">
-                    <h4 class="font-bold">${student.name}</h4>
-                    <p class="text-gray-600">Email: ${student.email}</p>
-                    <p class="text-gray-600">Phone: ${student.phone}</p>
-                    <p class="text-gray-600">Student ID: ${student.id}</p>
-                    <p class="text-gray-600">Registered: ${new Date(student.registrationDate).toLocaleDateString()}</p>
+            studentList.innerHTML = filteredStudents.map(student => `
+                <div class="border p-4 rounded mb-4 ${student.status === 'banned' ? 'bg-red-50 border-red-200' : 'bg-white'}">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h4 class="font-bold flex items-center">
+                                ${student.name}
+                                ${student.status === 'banned' ? '<span class="ml-2 bg-red-600 text-white px-2 py-1 rounded text-xs">BANNED</span>' : ''}
+                            </h4>
+                            <p class="text-gray-600">Email: ${student.email}</p>
+                            <p class="text-gray-600">Phone: ${student.phone}</p>
+                            <p class="text-gray-600">Student ID: ${student.id}</p>
+                            <p class="text-gray-600">Registered: ${new Date(student.registrationDate).toLocaleDateString()}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            ${student.status === 'banned' ? 
+                                `<button onclick="unbanStudent('${student.id}')" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">Unban</button>` :
+                                `<button onclick="banStudent('${student.id}')" class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">Ban</button>`
+                            }
+                        </div>
+                    </div>
+                    
                     ${student.enrolledCourses && student.enrolledCourses.length > 0 ? `
-                        <div class="mt-2">
-                            <p class="font-semibold">Enrolled Courses:</p>
+                        <div class="mt-4">
+                            <p class="font-semibold mb-2">Enrolled Courses:</p>
                             ${student.enrolledCourses.map(course => `
-                                <div class="text-sm bg-gray-50 p-2 rounded mb-2">
-                                    <p class="text-blue-600 font-medium">• ${course.courseName}</p>
-                                    <p class="text-gray-600">Amount: ₹${course.paymentAmount.toLocaleString('en-IN')}</p>
-                                    <p class="text-gray-600">Method: ${course.paymentMethod ? course.paymentMethod.toUpperCase() : 'N/A'}</p>
-                                    <p class="text-gray-600">Transaction ID: ${course.transactionId || 'N/A'}</p>
-                                    <p class="text-${course.paymentStatus === 'Pending Verification' ? 'orange' : 'green'}-600">
-                                        Status: ${course.paymentStatus || 'Confirmed'}
-                                    </p>
-                                    <p class="text-gray-500 text-xs">Enrolled: ${new Date(course.enrollmentDate).toLocaleDateString()}</p>
+                                <div class="text-sm bg-gray-50 p-3 rounded mb-2 border">
+                                    <div class="flex justify-between items-start">
+                                        <div class="flex-1">
+                                            <p class="text-blue-600 font-medium">• ${course.courseName}</p>
+                                            <p class="text-gray-600">Amount: ₹${course.paymentAmount.toLocaleString('en-IN')}</p>
+                                            <p class="text-gray-600">Method: ${course.paymentMethod ? course.paymentMethod.toUpperCase() : 'N/A'}</p>
+                                            <p class="text-gray-600">Transaction ID: ${course.transactionId || 'N/A'}</p>
+                                            <p class="text-gray-500 text-xs">Enrolled: ${new Date(course.enrollmentDate).toLocaleDateString()}</p>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="mb-2">
+                                                <span class="text-xs font-medium">Status:</span>
+                                                <span class="ml-1 px-2 py-1 rounded text-xs ${
+                                                    course.paymentStatus === 'Confirmed' || course.paymentStatus === 'Approved' ? 'bg-green-100 text-green-800' :
+                                                    course.paymentStatus === 'Pending Verification' ? 'bg-yellow-100 text-yellow-800' :
+                                                    course.paymentStatus === 'Rejected' ? 'bg-red-100 text-red-800' :
+                                                    'bg-gray-100 text-gray-800'
+                                                }">
+                                                    ${course.paymentStatus || 'Confirmed'}
+                                                </span>
+                                            </div>
+                                            ${course.paymentStatus === 'Pending Verification' ? `
+                                                <div class="flex gap-1">
+                                                    <button onclick="approvePayment('${student.id}', '${course.courseId}')" class="bg-green-600 text-white px-2 py-1 rounded text-xs hover:bg-green-700">Approve</button>
+                                                    <button onclick="rejectPayment('${student.id}', '${course.courseId}')" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700">Reject</button>
+                                                </div>
+                                            ` : course.paymentStatus === 'Approved' || course.paymentStatus === 'Confirmed' ? `
+                                                <div class="flex gap-1">
+                                                    <button onclick="revokeAccess('${student.id}', '${course.courseId}')" class="bg-orange-600 text-white px-2 py-1 rounded text-xs hover:bg-orange-700">Revoke</button>
+                                                </div>
+                                            ` : ''}
+                                        </div>
+                                    </div>
                                 </div>
                             `).join('')}
                         </div>
-                    ` : '<p class="text-sm text-gray-500">No courses enrolled</p>'}
+                    ` : '<p class="text-sm text-gray-500 mt-2">No courses enrolled</p>'}
                 </div>
-            `).join('') || '<p class="text-gray-500">No students registered yet.</p>';
+            `).join('') || '<p class="text-gray-500">No students found for this filter.</p>';
+        }
+
+        function filterStudents(filter) {
+            // Update button styles
+            document.querySelectorAll('[id^="filter-"]').forEach(btn => {
+                btn.classList.remove('bg-blue-600');
+                btn.classList.add('bg-gray-600');
+            });
+            document.getElementById(`filter-${filter}`).classList.remove('bg-gray-600');
+            document.getElementById(`filter-${filter}`).classList.add('bg-blue-600');
+            
+            populateStudentList(filter);
+        }
+
+        function approvePayment(studentId, courseId) {
+            const student = students.find(s => s.id === studentId);
+            if (student && student.enrolledCourses) {
+                const course = student.enrolledCourses.find(c => c.courseId == courseId);
+                if (course) {
+                    course.paymentStatus = 'Approved';
+                    course.approvalDate = new Date().toISOString();
+                    saveData();
+                    populateStudentList();
+                    alert(`Payment approved for ${student.name}. They now have access to video lectures.`);
+                }
+            }
+        }
+
+        function rejectPayment(studentId, courseId) {
+            const reason = prompt('Enter reason for rejection (optional):');
+            const student = students.find(s => s.id === studentId);
+            if (student && student.enrolledCourses) {
+                const course = student.enrolledCourses.find(c => c.courseId == courseId);
+                if (course) {
+                    course.paymentStatus = 'Rejected';
+                    course.rejectionReason = reason || 'Payment verification failed';
+                    course.rejectionDate = new Date().toISOString();
+                    saveData();
+                    populateStudentList();
+                    alert(`Payment rejected for ${student.name}. Reason: ${course.rejectionReason}`);
+                }
+            }
+        }
+
+        function revokeAccess(studentId, courseId) {
+            if (confirm('Are you sure you want to revoke access for this student?')) {
+                const student = students.find(s => s.id === studentId);
+                if (student && student.enrolledCourses) {
+                    const course = student.enrolledCourses.find(c => c.courseId == courseId);
+                    if (course) {
+                        course.paymentStatus = 'Access Revoked';
+                        course.revocationDate = new Date().toISOString();
+                        saveData();
+                        populateStudentList();
+                        alert(`Access revoked for ${student.name}.`);
+                    }
+                }
+            }
+        }
+
+        function banStudent(studentId) {
+            const reason = prompt('Enter reason for banning this student:');
+            if (reason) {
+                const student = students.find(s => s.id === studentId);
+                if (student) {
+                    student.status = 'banned';
+                    student.banReason = reason;
+                    student.banDate = new Date().toISOString();
+                    saveData();
+                    populateStudentList();
+                    alert(`Student ${student.name} has been banned. Reason: ${reason}`);
+                }
+            }
+        }
+
+        function unbanStudent(studentId) {
+            if (confirm('Are you sure you want to unban this student?')) {
+                const student = students.find(s => s.id === studentId);
+                if (student) {
+                    student.status = 'active';
+                    student.unbanDate = new Date().toISOString();
+                    delete student.banReason;
+                    saveData();
+                    populateStudentList();
+                    alert(`Student ${student.name} has been unbanned.`);
+                }
+            }
+        }
+
+        // Video Lecture Management Functions
+        function showAddLectureForm() {
+            document.getElementById('add-lecture-form').classList.remove('hidden');
+        }
+
+        function hideAddLectureForm() {
+            document.getElementById('add-lecture-form').classList.add('hidden');
+        }
+
+        function addNewLecture() {
+            const courseName = document.getElementById('new-lecture-course').value;
+            const title = document.getElementById('new-lecture-title').value;
+            const description = document.getElementById('new-lecture-description').value;
+            const videoUrl = document.getElementById('new-lecture-video').value;
+            const duration = document.getElementById('new-lecture-duration').value;
+
+            if (!courseName || !title || !description || !videoUrl || !duration) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            if (!videoLectures[courseName]) {
+                videoLectures[courseName] = [];
+            }
+
+            videoLectures[courseName].push({
+                id: Date.now(),
+                title: title,
+                description: description,
+                videoUrl: videoUrl,
+                duration: parseInt(duration),
+                dateAdded: new Date().toISOString()
+            });
+
+            saveData();
+            populateLectureManagement();
+            hideAddLectureForm();
+            
+            // Clear form
+            document.getElementById('new-lecture-course').value = '';
+            document.getElementById('new-lecture-title').value = '';
+            document.getElementById('new-lecture-description').value = '';
+            document.getElementById('new-lecture-video').value = '';
+            document.getElementById('new-lecture-duration').value = '';
+            
+            alert('Video lecture added successfully!');
+        }
+
+        function populateLectureManagement() {
+            const lectureList = document.getElementById('lecture-management-list');
+            let html = '';
+            
+            Object.keys(videoLectures).forEach(courseName => {
+                html += `<div class="border p-4 rounded mb-4">
+                    <h4 class="font-bold text-lg mb-2">${courseName}</h4>
+                    <p class="text-gray-600 mb-3">${videoLectures[courseName].length} lectures</p>
+                    <div class="space-y-2">
+                        ${videoLectures[courseName].map((lecture, index) => `
+                            <div class="bg-gray-50 p-3 rounded border">
+                                <div class="flex justify-between items-start">
+                                    <div class="flex-1">
+                                        <p class="font-medium">${index + 1}. ${lecture.title}</p>
+                                        <p class="text-sm text-gray-600 mb-1">${lecture.description}</p>
+                                        <div class="flex items-center text-xs text-gray-500">
+                                            <span class="mr-4">⏱️ ${lecture.duration} min</span>
+                                            <span>📅 ${new Date(lecture.dateAdded).toLocaleDateString()}</span>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4 flex gap-2">
+                                        <button onclick="editLecture('${courseName}', ${lecture.id})" class="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700">Edit</button>
+                                        <button onclick="deleteLecture('${courseName}', ${lecture.id})" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>`;
+            });
+            
+            lectureList.innerHTML = html || '<p class="text-gray-500">No video lectures added yet.</p>';
+        }
+
+        function editLecture(courseName, lectureId) {
+            const lecture = videoLectures[courseName].find(l => l.id === lectureId);
+            if (!lecture) return;
+
+            const newTitle = prompt('Lecture Title:', lecture.title);
+            if (newTitle === null) return;
+
+            const newDescription = prompt('Lecture Description:', lecture.description);
+            if (newDescription === null) return;
+
+            const newVideoUrl = prompt('Video URL:', lecture.videoUrl);
+            if (newVideoUrl === null) return;
+
+            const newDuration = prompt('Duration (minutes):', lecture.duration);
+            if (newDuration === null) return;
+
+            lecture.title = newTitle;
+            lecture.description = newDescription;
+            lecture.videoUrl = newVideoUrl;
+            lecture.duration = parseInt(newDuration);
+
+            saveData();
+            populateLectureManagement();
+            alert('Lecture updated successfully!');
+        }
+
+        function deleteLecture(courseName, lectureId) {
+            if (confirm('Are you sure you want to delete this lecture?')) {
+                videoLectures[courseName] = videoLectures[courseName].filter(l => l.id !== lectureId);
+                if (videoLectures[courseName].length === 0) {
+                    delete videoLectures[courseName];
+                }
+                saveData();
+                populateLectureManagement();
+                alert('Lecture deleted successfully!');
+            }
         }
 
         function showAddCourseForm() {
@@ -1414,6 +1906,356 @@
             document.getElementById('course-details-modal').classList.remove('hidden');
         }
 
+        function showCodeEditor() {
+            const codeEditorContent = document.getElementById('code-editor-content');
+            codeEditorContent.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Code Editor Panel -->
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 mb-4">
+                            <label class="font-semibold">Language:</label>
+                            <select id="language-select" onchange="changeLanguage()" class="p-2 border rounded-lg">
+                                <option value="c">C</option>
+                                <option value="cpp">C++</option>
+                                <option value="java">Java</option>
+                                <option value="python">Python</option>
+                                <option value="javascript">JavaScript</option>
+                                <option value="html">HTML</option>
+                            </select>
+                            <button onclick="runCode()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 font-semibold">
+                                ▶️ Run Code
+                            </button>
+                            <button onclick="clearEditor()" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+                                🗑️ Clear
+                            </button>
+                        </div>
+                        
+                        <div class="bg-gray-900 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-green-400 font-mono text-sm">Code Editor</span>
+                                <span class="text-gray-400 text-xs" id="language-indicator">C</span>
+                            </div>
+                            <textarea id="code-textarea" class="w-full h-96 bg-gray-800 text-green-400 font-mono text-sm p-4 rounded border-none resize-none focus:outline-none focus:ring-2 focus:ring-green-500" 
+                                placeholder="Write your code here..." spellcheck="false">${codeTemplates.c}</textarea>
+                        </div>
+                        
+                        <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                            <h5 class="font-semibold text-blue-800 mb-2">💡 Quick Tips:</h5>
+                            <ul class="text-sm text-blue-700 space-y-1">
+                                <li>• Use Ctrl+A to select all code</li>
+                                <li>• Code will be simulated (no actual compilation)</li>
+                                <li>• Try different programming languages</li>
+                                <li>• Perfect for learning and practice</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Output Panel -->
+                    <div class="space-y-4">
+                        <div class="bg-gray-900 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-blue-400 font-mono text-sm">Output Console</span>
+                                <button onclick="clearOutput()" class="text-gray-400 hover:text-white text-xs">Clear</button>
+                            </div>
+                            <div id="output-console" class="w-full h-96 bg-gray-800 text-white font-mono text-sm p-4 rounded overflow-y-auto">
+                                <div class="text-gray-400">Ready to run your code...</div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+                            <h5 class="font-semibold text-yellow-800 mb-2">⚠️ Note:</h5>
+                            <p class="text-sm text-yellow-700">
+                                This is a demo code editor. Output is simulated for educational purposes. 
+                                For real compilation, use professional IDEs like VS Code, IntelliJ, or online compilers.
+                            </p>
+                        </div>
+                        
+                        <div class="bg-green-50 border border-green-200 p-4 rounded-lg">
+                            <h5 class="font-semibold text-green-800 mb-2">🎯 Sample Programs:</h5>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="loadSample('hello')" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">Hello World</button>
+                                <button onclick="loadSample('loop')" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">For Loop</button>
+                                <button onclick="loadSample('function')" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">Function</button>
+                                <button onclick="loadSample('array')" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">Array</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('code-editor-modal').classList.remove('hidden');
+        }
+
+        function changeLanguage() {
+            const language = document.getElementById('language-select').value;
+            const codeTextarea = document.getElementById('code-textarea');
+            const languageIndicator = document.getElementById('language-indicator');
+            
+            codeTextarea.value = codeTemplates[language];
+            languageIndicator.textContent = language.toUpperCase();
+        }
+
+        function clearEditor() {
+            document.getElementById('code-textarea').value = '';
+        }
+
+        function clearOutput() {
+            document.getElementById('output-console').innerHTML = '<div class="text-gray-400">Output cleared...</div>';
+        }
+
+        function runCode() {
+            const code = document.getElementById('code-textarea').value;
+            const language = document.getElementById('language-select').value;
+            const outputConsole = document.getElementById('output-console');
+            
+            if (!code.trim()) {
+                outputConsole.innerHTML = '<div class="text-red-400">Error: No code to run!</div>';
+                return;
+            }
+            
+            // Simulate code execution
+            outputConsole.innerHTML = '<div class="text-yellow-400">Compiling and running...</div>';
+            
+            setTimeout(() => {
+                let output = '';
+                
+                // Simple simulation based on language and code content
+                if (language === 'html') {
+                    output = `<div class="text-green-400">✅ HTML code is valid!</div>
+                             <div class="text-blue-400">📄 HTML Preview:</div>
+                             <div class="bg-white text-black p-2 rounded mt-2 border">
+                                 <iframe srcdoc="${code.replace(/"/g, '&quot;')}" class="w-full h-32 border-none"></iframe>
+                             </div>`;
+                } else if (code.toLowerCase().includes('hello')) {
+                    output = `<div class="text-green-400">✅ Compilation successful!</div>
+                             <div class="text-white">Hello, World!</div>
+                             <div class="text-gray-400 mt-2">Program executed successfully.</div>`;
+                } else if (code.includes('for') || code.includes('while')) {
+                    output = `<div class="text-green-400">✅ Compilation successful!</div>
+                             <div class="text-white">1</div>
+                             <div class="text-white">2</div>
+                             <div class="text-white">3</div>
+                             <div class="text-white">4</div>
+                             <div class="text-white">5</div>
+                             <div class="text-gray-400 mt-2">Loop executed successfully.</div>`;
+                } else if (code.includes('function') || code.includes('def ') || code.includes('int ')) {
+                    output = `<div class="text-green-400">✅ Compilation successful!</div>
+                             <div class="text-white">Function result: 42</div>
+                             <div class="text-gray-400 mt-2">Function executed successfully.</div>`;
+                } else {
+                    output = `<div class="text-green-400">✅ Compilation successful!</div>
+                             <div class="text-white">Program output would appear here</div>
+                             <div class="text-gray-400 mt-2">Execution completed.</div>`;
+                }
+                
+                outputConsole.innerHTML = output;
+            }, 1500);
+        }
+
+        function loadSample(type) {
+            const language = document.getElementById('language-select').value;
+            const codeTextarea = document.getElementById('code-textarea');
+            
+            let sampleCode = '';
+            
+            switch(type) {
+                case 'hello':
+                    sampleCode = codeTemplates[language];
+                    break;
+                case 'loop':
+                    if (language === 'c' || language === 'cpp') {
+                        sampleCode = `#include <stdio.h>
+
+int main() {
+    for(int i = 1; i <= 5; i++) {
+        printf("%d\\n", i);
+    }
+    return 0;
+}`;
+                    } else if (language === 'java') {
+                        sampleCode = `public class Main {
+    public static void main(String[] args) {
+        for(int i = 1; i <= 5; i++) {
+            System.out.println(i);
+        }
+    }
+}`;
+                    } else if (language === 'python') {
+                        sampleCode = `for i in range(1, 6):
+    print(i)`;
+                    } else if (language === 'javascript') {
+                        sampleCode = `for(let i = 1; i <= 5; i++) {
+    console.log(i);
+}`;
+                    }
+                    break;
+                case 'function':
+                    if (language === 'c' || language === 'cpp') {
+                        sampleCode = `#include <stdio.h>
+
+int add(int a, int b) {
+    return a + b;
+}
+
+int main() {
+    int result = add(5, 3);
+    printf("Result: %d\\n", result);
+    return 0;
+}`;
+                    } else if (language === 'python') {
+                        sampleCode = `def add(a, b):
+    return a + b
+
+result = add(5, 3)
+print(f"Result: {result}")`;
+                    }
+                    break;
+                case 'array':
+                    if (language === 'c' || language === 'cpp') {
+                        sampleCode = `#include <stdio.h>
+
+int main() {
+    int arr[] = {1, 2, 3, 4, 5};
+    int size = 5;
+    
+    for(int i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\\n");
+    return 0;
+}`;
+                    } else if (language === 'python') {
+                        sampleCode = `arr = [1, 2, 3, 4, 5]
+
+for num in arr:
+    print(num, end=" ")
+print()`;
+                    }
+                    break;
+            }
+            
+            if (sampleCode) {
+                codeTextarea.value = sampleCode;
+            }
+        }
+
+        function showVideoLectures() {
+            if (!currentUser) {
+                alert('Please login first to access video lectures.');
+                showLogin();
+                return;
+            }
+
+            if (currentUser.type === 'admin') {
+                alert('Admins cannot access student lectures. Use Admin Panel to manage lectures.');
+                return;
+            }
+
+            // Check if student has paid for any courses
+            const hasAccess = currentUser.enrolledCourses && 
+                             currentUser.enrolledCourses.some(course => 
+                                 course.paymentStatus === 'Confirmed' || 
+                                 course.paymentStatus === 'Approved'
+                             );
+
+            if (!hasAccess) {
+                const videoLecturesContent = document.getElementById('video-lectures-content');
+                videoLecturesContent.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="text-6xl mb-4">🔒</div>
+                        <h4 class="text-2xl font-bold mb-4 text-red-600">Access Denied</h4>
+                        <p class="text-gray-600 mb-6">You need to enroll and complete payment for a course to access video lectures.</p>
+                        <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg mb-6">
+                            <p class="text-yellow-800">
+                                <strong>To get access:</strong><br>
+                                1. Enroll in any course<br>
+                                2. Complete the payment<br>
+                                3. Wait for admin approval<br>
+                                4. Access will be granted within 24 hours
+                            </p>
+                        </div>
+                        <button onclick="scrollToCourses(); closeModal('video-lectures-modal')" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-semibold">
+                            Browse Courses
+                        </button>
+                    </div>
+                `;
+            } else {
+                // Show available lectures for enrolled courses
+                const enrolledCourses = currentUser.enrolledCourses.filter(course => 
+                    course.paymentStatus === 'Confirmed' || course.paymentStatus === 'Approved'
+                );
+                
+                let lecturesHtml = '';
+                enrolledCourses.forEach(course => {
+                    const courseLectures = videoLectures[course.courseName] || [];
+                    if (courseLectures.length > 0) {
+                        lecturesHtml += `
+                            <div class="mb-8">
+                                <h4 class="text-xl font-bold mb-4 text-blue-600">${course.courseName}</h4>
+                                <div class="grid gap-4">
+                                    ${courseLectures.map((lecture, index) => `
+                                        <div class="border rounded-lg p-4 hover:shadow-md transition">
+                                            <div class="flex items-start justify-between">
+                                                <div class="flex-1">
+                                                    <h5 class="font-semibold mb-2">${index + 1}. ${lecture.title}</h5>
+                                                    <p class="text-gray-600 text-sm mb-2">${lecture.description}</p>
+                                                    <div class="flex items-center text-sm text-gray-500">
+                                                        <span class="mr-4">⏱️ ${lecture.duration} minutes</span>
+                                                        <span>📅 Added: ${new Date(lecture.dateAdded).toLocaleDateString()}</span>
+                                                    </div>
+                                                </div>
+                                                <button onclick="playVideo('${lecture.videoUrl}', '${lecture.title}')" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-4">
+                                                    ▶️ Watch
+                                                </button>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+
+                const videoLecturesContent = document.getElementById('video-lectures-content');
+                videoLecturesContent.innerHTML = lecturesHtml || `
+                    <div class="text-center py-12">
+                        <div class="text-6xl mb-4">📚</div>
+                        <h4 class="text-2xl font-bold mb-4">No Lectures Available</h4>
+                        <p class="text-gray-600">Lectures for your enrolled courses will appear here once added by instructors.</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('video-lectures-modal').classList.remove('hidden');
+        }
+
+        function playVideo(videoUrl, title) {
+            // Extract video ID from YouTube URL
+            let embedUrl = videoUrl;
+            if (videoUrl.includes('youtube.com/watch?v=')) {
+                const videoId = videoUrl.split('v=')[1].split('&')[0];
+                embedUrl = `https://www.youtube.com/embed/${videoId}`;
+            } else if (videoUrl.includes('youtu.be/')) {
+                const videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
+                embedUrl = `https://www.youtube.com/embed/${videoId}`;
+            }
+
+            const videoPlayer = document.createElement('div');
+            videoPlayer.className = 'fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center';
+            videoPlayer.innerHTML = `
+                <div class="bg-white rounded-lg p-4 max-w-4xl w-full mx-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold">${title}</h3>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                    </div>
+                    <div class="aspect-video">
+                        <iframe src="${embedUrl}" class="w-full h-full rounded" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(videoPlayer);
+        }
+
         function showSampleTest() {
             const sampleTestContent = document.getElementById('sample-test-content');
             sampleTestContent.innerHTML = `
@@ -1518,5 +2360,5 @@
             `;
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97ee995040e91772',t:'MTc1NzgzOTQyOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97eea66fe1d66eb9',t:'MTc1NzgzOTk2Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
