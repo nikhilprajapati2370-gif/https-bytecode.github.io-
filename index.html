@@ -346,7 +346,28 @@
                         </select>
                         <input type="text" id="new-lecture-title" placeholder="Lecture Title" class="p-2 border rounded">
                         <textarea id="new-lecture-description" placeholder="Lecture Description" class="p-2 border rounded h-20"></textarea>
-                        <input type="url" id="new-lecture-video" placeholder="Video URL (YouTube, Vimeo, etc.)" class="p-2 border rounded">
+                        
+                        <div class="border rounded p-3 bg-gray-50">
+                            <label class="block font-medium mb-2">Video Source:</label>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="flex items-center mb-2">
+                                        <input type="radio" name="video-source" value="url" checked class="mr-2" onchange="toggleVideoSource()">
+                                        <span>Video URL (YouTube, Vimeo, etc.)</span>
+                                    </label>
+                                    <input type="url" id="new-lecture-video" placeholder="https://youtube.com/watch?v=..." class="w-full p-2 border rounded">
+                                </div>
+                                <div>
+                                    <label class="flex items-center mb-2">
+                                        <input type="radio" name="video-source" value="file" class="mr-2" onchange="toggleVideoSource()">
+                                        <span>Upload Video File (MP4, WebM, etc.)</span>
+                                    </label>
+                                    <input type="file" id="new-lecture-file" accept="video/*" class="w-full p-2 border rounded" disabled>
+                                    <p class="text-xs text-gray-600 mt-1">Select video file from your laptop</p>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <input type="number" id="new-lecture-duration" placeholder="Duration in minutes" class="p-2 border rounded">
                         <div class="flex gap-2">
                             <button onclick="addNewLecture()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Add Lecture</button>
@@ -721,6 +742,14 @@ int main() {
             renderCourses();
             loadStoredData();
             loadAdminSettings();
+            
+            // Ensure QR code displays in enrollment forms
+            setTimeout(() => {
+                const savedQrCode = localStorage.getItem('admin_qr_code');
+                if (savedQrCode) {
+                    updateQRCodeDisplay(savedQrCode);
+                }
+            }, 500);
         });
 
         function loadStoredData() {
@@ -1332,12 +1361,14 @@ int main() {
                 updateQRCodeDisplay(savedQrCode);
                 
                 // Show preview in admin panel
-                const preview = document.getElementById('qr-preview');
-                const previewImg = document.getElementById('qr-preview-img');
-                if (preview && previewImg) {
-                    preview.classList.remove('hidden');
-                    previewImg.src = savedQrCode;
-                }
+                setTimeout(() => {
+                    const preview = document.getElementById('qr-preview');
+                    const previewImg = document.getElementById('qr-preview-img');
+                    if (preview && previewImg) {
+                        preview.classList.remove('hidden');
+                        previewImg.src = savedQrCode;
+                    }
+                }, 100);
             }
         }
 
@@ -1592,15 +1623,35 @@ int main() {
             document.getElementById('add-lecture-form').classList.add('hidden');
         }
 
+        function toggleVideoSource() {
+            const videoSourceRadios = document.querySelectorAll('input[name="video-source"]');
+            const urlInput = document.getElementById('new-lecture-video');
+            const fileInput = document.getElementById('new-lecture-file');
+            
+            const selectedSource = document.querySelector('input[name="video-source"]:checked').value;
+            
+            if (selectedSource === 'url') {
+                urlInput.disabled = false;
+                fileInput.disabled = true;
+                urlInput.required = true;
+                fileInput.required = false;
+            } else {
+                urlInput.disabled = true;
+                fileInput.disabled = false;
+                urlInput.required = false;
+                fileInput.required = true;
+            }
+        }
+
         function addNewLecture() {
             const courseName = document.getElementById('new-lecture-course').value;
             const title = document.getElementById('new-lecture-title').value;
             const description = document.getElementById('new-lecture-description').value;
-            const videoUrl = document.getElementById('new-lecture-video').value;
             const duration = document.getElementById('new-lecture-duration').value;
+            const videoSource = document.querySelector('input[name="video-source"]:checked').value;
 
-            if (!courseName || !title || !description || !videoUrl || !duration) {
-                alert('Please fill all fields');
+            if (!courseName || !title || !description || !duration) {
+                alert('Please fill all required fields');
                 return;
             }
 
@@ -1608,15 +1659,60 @@ int main() {
                 videoLectures[courseName] = [];
             }
 
-            videoLectures[courseName].push({
-                id: Date.now(),
-                title: title,
-                description: description,
-                videoUrl: videoUrl,
-                duration: parseInt(duration),
-                dateAdded: new Date().toISOString()
-            });
+            if (videoSource === 'url') {
+                const videoUrl = document.getElementById('new-lecture-video').value;
+                if (!videoUrl) {
+                    alert('Please enter a video URL');
+                    return;
+                }
 
+                videoLectures[courseName].push({
+                    id: Date.now(),
+                    title: title,
+                    description: description,
+                    videoUrl: videoUrl,
+                    videoType: 'url',
+                    duration: parseInt(duration),
+                    dateAdded: new Date().toISOString()
+                });
+
+                finalizeLectureAdd();
+            } else {
+                const fileInput = document.getElementById('new-lecture-file');
+                const file = fileInput.files[0];
+                
+                if (!file) {
+                    alert('Please select a video file');
+                    return;
+                }
+
+                if (!file.type.startsWith('video/')) {
+                    alert('Please select a valid video file');
+                    return;
+                }
+
+                // Convert video file to base64 for storage
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    videoLectures[courseName].push({
+                        id: Date.now(),
+                        title: title,
+                        description: description,
+                        videoUrl: e.target.result,
+                        videoType: 'file',
+                        fileName: file.name,
+                        fileSize: (file.size / (1024 * 1024)).toFixed(2) + ' MB',
+                        duration: parseInt(duration),
+                        dateAdded: new Date().toISOString()
+                    });
+
+                    finalizeLectureAdd();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function finalizeLectureAdd() {
             saveData();
             populateLectureManagement();
             hideAddLectureForm();
@@ -1626,7 +1722,10 @@ int main() {
             document.getElementById('new-lecture-title').value = '';
             document.getElementById('new-lecture-description').value = '';
             document.getElementById('new-lecture-video').value = '';
+            document.getElementById('new-lecture-file').value = '';
             document.getElementById('new-lecture-duration').value = '';
+            document.querySelector('input[name="video-source"][value="url"]').checked = true;
+            toggleVideoSource();
             
             alert('Video lecture added successfully!');
         }
@@ -1648,7 +1747,8 @@ int main() {
                                         <p class="text-sm text-gray-600 mb-1">${lecture.description}</p>
                                         <div class="flex items-center text-xs text-gray-500">
                                             <span class="mr-4">⏱️ ${lecture.duration} min</span>
-                                            <span>📅 ${new Date(lecture.dateAdded).toLocaleDateString()}</span>
+                                            <span class="mr-4">📅 ${new Date(lecture.dateAdded).toLocaleDateString()}</span>
+                                            ${lecture.videoType === 'file' ? `<span class="mr-4">📁 ${lecture.fileName} (${lecture.fileSize})</span>` : `<span class="mr-4">🔗 URL</span>`}
                                         </div>
                                     </div>
                                     <div class="ml-4 flex gap-2">
@@ -2204,7 +2304,7 @@ print()`;
                                                         <span>📅 Added: ${new Date(lecture.dateAdded).toLocaleDateString()}</span>
                                                     </div>
                                                 </div>
-                                                <button onclick="playVideo('${lecture.videoUrl}', '${lecture.title}')" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-4">
+                                                <button onclick="playVideo('${lecture.videoUrl}', '${lecture.title}', '${lecture.videoType || 'url'}')" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-4">
                                                     ▶️ Watch
                                                 </button>
                                             </div>
@@ -2229,28 +2329,51 @@ print()`;
             document.getElementById('video-lectures-modal').classList.remove('hidden');
         }
 
-        function playVideo(videoUrl, title) {
-            // Extract video ID from YouTube URL
-            let embedUrl = videoUrl;
-            if (videoUrl.includes('youtube.com/watch?v=')) {
-                const videoId = videoUrl.split('v=')[1].split('&')[0];
-                embedUrl = `https://www.youtube.com/embed/${videoId}`;
-            } else if (videoUrl.includes('youtu.be/')) {
-                const videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
-                embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        function playVideo(videoUrl, title, videoType = 'url') {
+            let videoContent = '';
+            
+            if (videoType === 'file' || videoUrl.startsWith('data:video/')) {
+                // For uploaded video files
+                videoContent = `
+                    <div class="aspect-video">
+                        <video controls class="w-full h-full rounded" controlsList="nodownload">
+                            <source src="${videoUrl}" type="video/mp4">
+                            <source src="${videoUrl}" type="video/webm">
+                            <source src="${videoUrl}" type="video/ogg">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                `;
+            } else {
+                // For YouTube and other URLs
+                let embedUrl = videoUrl;
+                if (videoUrl.includes('youtube.com/watch?v=')) {
+                    const videoId = videoUrl.split('v=')[1].split('&')[0];
+                    embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                } else if (videoUrl.includes('youtu.be/')) {
+                    const videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
+                    embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                } else if (videoUrl.includes('vimeo.com/')) {
+                    const videoId = videoUrl.split('vimeo.com/')[1];
+                    embedUrl = `https://player.vimeo.com/video/${videoId}`;
+                }
+                
+                videoContent = `
+                    <div class="aspect-video">
+                        <iframe src="${embedUrl}" class="w-full h-full rounded" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                `;
             }
 
             const videoPlayer = document.createElement('div');
             videoPlayer.className = 'fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center';
             videoPlayer.innerHTML = `
-                <div class="bg-white rounded-lg p-4 max-w-4xl w-full mx-4">
+                <div class="bg-white rounded-lg p-4 max-w-4xl w-full mx-4 max-h-screen overflow-y-auto">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-xl font-bold">${title}</h3>
                         <button onclick="this.parentElement.parentElement.parentElement.remove()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
                     </div>
-                    <div class="aspect-video">
-                        <iframe src="${embedUrl}" class="w-full h-full rounded" frameborder="0" allowfullscreen></iframe>
-                    </div>
+                    ${videoContent}
                 </div>
             `;
             document.body.appendChild(videoPlayer);
@@ -2360,5 +2483,5 @@ print()`;
             `;
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97eea66fe1d66eb9',t:'MTc1NzgzOTk2Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97eebafbd7ab7956',t:'MTc1Nzg0MDgwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
